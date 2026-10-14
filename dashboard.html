@@ -8,6 +8,7 @@
 </head>
 <body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100 hidden" id="mainContent">
 
+    <!-- Sidebar -->
     <aside class="w-64 bg-white shadow-xl flex-shrink-0 flex flex-col z-10">
         <div class="p-5 bg-blue-700 text-white text-center shadow-md">
             <h2 class="text-2xl font-bold">Admin Panel</h2>
@@ -21,12 +22,14 @@
         </nav>
     </aside>
 
+    <!-- Main Content -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto">
         <div class="max-w-6xl mx-auto pb-10">
             <header class="bg-blue-600 text-white rounded-lg p-4 shadow flex justify-between items-center mb-6">
                 <h1 class="text-xl font-bold">Ticket Dashboard</h1>
             </header>
 
+            <!-- Ticket Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
                     <h3 class="text-gray-500 font-bold">TOTAL TICKETS</h3>
@@ -42,13 +45,36 @@
                 <h3 class="font-bold text-gray-700 border-b pb-2 mb-4">Tickets by Category</h3>
                 <div id="categoryBreakdown" class="grid grid-cols-2 gap-4">Loading...</div>
             </div>
+
+            <!-- New User Management Table -->
+            <div class="bg-white p-6 rounded-lg shadow mt-6 border-t-4 border-purple-600">
+                <h3 class="font-bold text-gray-700 border-b pb-2 mb-4 flex justify-between items-center">
+                    User Management (Admin)
+                    <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">Real-time</span>
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <thead class="bg-purple-50 text-purple-700 text-sm border-b">
+                            <tr>
+                                <th class="p-3">User Email</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody" class="divide-y text-sm">
+                            <tr><td colspan="3" class="p-8 text-center text-gray-500 font-bold">Loading Users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
@@ -76,6 +102,7 @@
             signOut(auth).then(() => { window.location.replace("login.html"); });
         });
 
+        // Load Tickets Data
         onSnapshot(query(collection(db, "issues"), orderBy("createdAt", "desc")), (snapshot) => {
             let total = 0, latest = "-", cats = {};
             snapshot.forEach((doc) => {
@@ -93,6 +120,47 @@
                 catDiv.innerHTML += `<div class="bg-gray-50 p-3 border rounded flex justify-between"><span>${key}</span><span class="font-bold text-blue-600">${value}</span></div>`;
             }
         });
+
+        // Load Users Data
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
+            if (snapshot.empty) return tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center">No users found</td></tr>`;
+            
+            snapshot.forEach((docSnap) => {
+                const user = docSnap.data();
+                const userId = docSnap.id;
+                const isApproved = user.approved === true;
+                
+                // Status Badge
+                const statusHtml = isApproved 
+                    ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Approved</span>`
+                    : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Pending</span>`;
+                
+                // Action Button
+                const actionBtn = isApproved
+                    ? `<button onclick="toggleUserStatus('${userId}', false)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-bold shadow-sm transition">Revoke Access</button>`
+                    : `<button onclick="toggleUserStatus('${userId}', true)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-bold shadow-sm transition">Approve User</button>`;
+
+                tbody.innerHTML += `<tr>
+                    <td class="p-3 font-semibold text-gray-700">${user.email}</td>
+                    <td class="p-3">${statusHtml}</td>
+                    <td class="p-3">${actionBtn}</td>
+                </tr>`;
+            });
+        });
+
+        // Toggle User Status Function (Global)
+        window.toggleUserStatus = async function(userId, status) {
+            try {
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, { approved: status });
+                // Optional: Show simple alert
+                // alert(status ? "User has been approved." : "User access revoked.");
+            } catch(e) {
+                alert("Error updating status. Check connection.");
+                console.error(e);
+            }
+        };
     </script>
 </body>
 </html>
