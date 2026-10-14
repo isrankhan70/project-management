@@ -11,7 +11,6 @@
         .toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
-<!-- Flex লেআউট দিয়ে বডিকে দুইভাগে ভাগ করা হয়েছে -->
 <body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100">
 
     <!-- বাম পাশের সাইডবার / মেনুবার -->
@@ -20,17 +19,13 @@
             <h2 class="text-2xl font-bold">Admin Panel</h2>
         </div>
         <nav class="flex-1 p-4 space-y-3 overflow-y-auto mt-2">
-            <!-- মেনু আইটেম ১ (অ্যাকটিভ) -->
+            <!-- মেনু আইটেম ১: Ticket Entry (অ্যাকটিভ) -->
             <a href="#" class="block px-4 py-3 rounded bg-blue-50 text-blue-700 font-bold border-l-4 border-blue-600 shadow-sm">
-                🏠 Dashboard
+                📝 Ticket Entry
             </a>
-            <!-- মেনু আইটেম ২ -->
+            <!-- মেনু আইটেম ২: Ticket Dashboard -->
             <a href="#" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">
-                📝 Issue Reports
-            </a>
-            <!-- মেনু আইটেম ৩ -->
-            <a href="#" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">
-                ⚙️ Settings
+                📊 Ticket Dashboard
             </a>
         </nav>
         <div class="p-4 border-t text-center text-sm text-gray-400 font-semibold">
@@ -38,7 +33,7 @@
         </div>
     </aside>
 
-    <!-- ডান পাশের মূল কন্টেন্ট (আপনার আগের পেজটি) -->
+    <!-- ডান পাশের মূল কন্টেন্ট -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto">
         <div class="max-w-6xl mx-auto space-y-6 pb-10">
             <!-- Header -->
@@ -120,7 +115,7 @@
         Success!
     </div>
 
-    <!-- ফায়ারবেস স্ক্রিপ্ট (আপনার ডেটাবেসের তথ্য অপরিবর্তিত আছে) -->
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { 
