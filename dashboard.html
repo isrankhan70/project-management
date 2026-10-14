@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-xl flex-shrink-0 flex flex-col z-10">
+        <div class="p-5 bg-blue-700 text-white text-center shadow-md">
+            <h2 class="text-2xl font-bold">Admin Panel</h2>
+        </div>
+        <nav class="flex-1 p-4 space-y-3 overflow-y-auto mt-2">
+            <a href="index.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📝 Ticket Entry</a>
+            <a href="register.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📋 Ticket Register</a>
+            <a href="dashboard.html" class="block px-4 py-3 rounded bg-blue-50 text-blue-700 font-bold border-l-4 border-blue-600 shadow-sm transition">📊 Ticket Dashboard</a>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+        <div class="max-w-6xl mx-auto pb-10">
+            <header class="bg-blue-600 text-white rounded-lg p-4 shadow flex justify-between items-center mb-6">
+                <h1 class="text-xl font-bold">Ticket Dashboard</h1>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                    <h3 class="text-gray-500 font-bold">TOTAL TICKETS</h3>
+                    <p id="dashTotal" class="text-4xl font-black text-blue-600 mt-2">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+                    <h3 class="text-gray-500 font-bold">LATEST TICKET ID</h3>
+                    <p id="dashLatest" class="text-2xl font-bold text-green-600 mt-2">-</p>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow mt-6">
+                <h3 class="font-bold text-gray-700 border-b pb-2 mb-4">Tickets by Category</h3>
+                <div id="categoryBreakdown" class="grid grid-cols-2 gap-4">Loading...</div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const app = initializeApp({
+            apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY", projectId: "project-management-70-8277e"
+        });
+        const db = getFirestore(app);
+
+        onSnapshot(query(collection(db, "issues"), orderBy("createdAt", "desc")), (snapshot) => {
+            let total = 0, latest = "-", cats = {};
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                total++;
+                if (total === 1) latest = data.issueId;
+                cats[data.category] = (cats[data.category] || 0) + 1;
+            });
+
+            document.getElementById('dashTotal').innerText = total;
+            document.getElementById('dashLatest').innerText = latest;
+            
+            const catDiv = document.getElementById('categoryBreakdown'); catDiv.innerHTML = '';
+            for (const [key, value] of Object.entries(cats)) {
+                catDiv.innerHTML += `<div class="bg-gray-50 p-3 border rounded flex justify-between"><span>${key}</span><span class="font-bold text-blue-600">${value}</span></div>`;
+            }
+        });
+    </script>
+</body>
+</html>
