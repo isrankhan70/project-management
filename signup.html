@@ -29,7 +29,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
@@ -41,6 +42,7 @@
         };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
         document.getElementById('signupForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -51,11 +53,22 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // ফায়ারবেসে নতুন ইউজার তৈরি করার কমান্ড
             createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    alert("Account created successfully!");
-                    window.location.href = "index.html"; // অ্যাকাউন্ট খোলার সাথে সাথেই লগইন হয়ে Entry পেজে চলে যাবে
+                .then(async (userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // User ke Firestore e "approved: false" hisebe save kora hocche
+                    await setDoc(doc(db, "users", user.uid), {
+                        email: email,
+                        approved: false, // Default vabe permission nai
+                        role: "user"
+                    });
+
+                    // Sathe sathe logout kore deya hocche
+                    await signOut(auth);
+
+                    alert("Account created! Please wait for Admin approval to login.");
+                    window.location.href = "login.html"; // Login page e ferot pathano hocche
                 })
                 .catch((error) => {
                     alert("Error: " + error.message);
