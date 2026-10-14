@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Create Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-200">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96 border-t-4 border-green-600">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-700">Create New Account</h2>
+        <form id="signupForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-bold mb-1">Gmail Address</label>
+                <input type="email" id="email" required class="w-full border p-2 rounded bg-gray-50 focus:bg-white" placeholder="yourname@gmail.com">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">New Password</label>
+                <input type="password" id="password" required class="w-full border p-2 rounded bg-gray-50 focus:bg-white" placeholder="Minimum 6 characters">
+            </div>
+            <button type="submit" id="signupBtn" class="w-full bg-green-600 text-white p-2 rounded font-bold hover:bg-green-700 mt-4 transition">Sign Up</button>
+        </form>
+        
+        <p class="mt-6 text-center text-sm text-gray-600">
+            Already have an account? 
+            <a href="login.html" class="text-blue-600 font-bold hover:underline">Login here</a>
+        </p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
+            authDomain: "project-management-70-8277e.firebaseapp.com",
+            projectId: "project-management-70-8277e",
+            storageBucket: "project-management-70-8277e.firebasestorage.app",
+            messagingSenderId: "178430900706",
+            appId: "1:178430900706:web:3085f215cb02b840bfa1bb"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('signupBtn');
+            btn.innerText = "Creating Account...";
+            btn.disabled = true;
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // ফায়ারবেসে নতুন ইউজার তৈরি করার কমান্ড
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Account created successfully!");
+                    window.location.href = "index.html"; // অ্যাকাউন্ট খোলার সাথে সাথেই লগইন হয়ে Entry পেজে চলে যাবে
+                })
+                .catch((error) => {
+                    alert("Error: " + error.message);
+                    btn.innerText = "Sign Up";
+                    btn.disabled = false;
+                });
+        });
+    </script>
+</body>
+</html>
