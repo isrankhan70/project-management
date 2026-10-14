@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Tracking Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: sans-serif; background-color: #f3f4f6; }
+        .toast { transition: opacity 0.3s ease, transform 0.3s ease; opacity: 0; transform: translateY(100%); }
+        .toast.show { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="text-gray-800 p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white rounded-lg p-4 shadow flex justify-between items-center">
+            <h1 class="text-xl font-bold">Live Issue Tracking Database</h1>
+            <span class="bg-green-500 px-3 py-1 rounded-full text-sm font-semibold shadow">Firebase Live</span>
+        </header>
+
+        <!-- Form Section -->
+        <section class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
+            <h2 class="text-lg font-bold mb-4 border-b pb-2">Submit New Issue</h2>
+            <form id="issueForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Issue ID</label>
+                        <input type="text" id="issueId" value="Auto Generated" readonly class="w-full border p-2 rounded bg-gray-200 text-gray-500 cursor-not-allowed font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Date Reported *</label>
+                        <input type="date" id="dateReported" required class="w-full border p-2 rounded bg-gray-50 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Category / Module *</label>
+                        <input type="text" id="category" required class="w-full border p-2 rounded bg-gray-50 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Page / Location</label>
+                        <input type="text" id="page" class="w-full border p-2 rounded bg-gray-50 focus:bg-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Issue Description *</label>
+                        <textarea id="description" required rows="2" class="w-full border p-2 rounded bg-gray-50 focus:bg-white"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Remarks / Resolution</label>
+                        <textarea id="remarks" rows="2" class="w-full border p-2 rounded bg-gray-50 focus:bg-white"></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="document.getElementById('issueForm').reset()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded font-bold hover:bg-gray-300">Clear</button>
+                    <button type="submit" id="submitBtn" class="px-6 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2">
+                        <span id="btnText">Save Entry</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Table Section -->
+        <section class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="p-4 bg-gray-100 border-b flex justify-between items-center">
+                <h2 class="font-bold">Recent Issues</h2>
+                <span class="text-xs text-gray-500">Auto-syncs in realtime</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 text-gray-600 text-sm border-b">
+                        <tr>
+                            <th class="p-3">Issue ID</th>
+                            <th class="p-3">Date Reported</th>
+                            <th class="p-3">Category</th>
+                            <th class="p-3">Page</th>
+                            <th class="p-3">Description</th>
+                            <th class="p-3">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y text-sm">
+                        <tr><td colspan="6" class="p-8 text-center text-gray-500">Connecting to Firebase...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast message -->
+    <div id="toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 font-bold">
+        Success!
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            onSnapshot, 
+            query, 
+            orderBy, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // আপনার ফায়ারবেস কনফিগারেশন বসানো হয়েছে
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
+            authDomain: "project-management-70-8277e.firebaseapp.com",
+            projectId: "project-management-70-8277e",
+            storageBucket: "project-management-70-8277e.firebasestorage.app",
+            messagingSenderId: "178430900706",
+            appId: "1:178430900706:web:3085f215cb02b840bfa1bb",
+            measurementId: "G-M7KVYNV540"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const issuesCol = collection(db, "issues");
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `toast fixed bottom-5 right-5 text-white px-6 py-3 rounded shadow-lg z-50 font-bold ${isError ? 'bg-red-600' : 'bg-green-600'} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // রিয়েলটাইম ডেটা শো করা
+        const q = query(issuesCol, orderBy("createdAt", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (snapshot.empty) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500">No issues found.</td></tr>`;
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const issue = doc.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-gray-700">${issue.issueId || doc.id.substring(0, 8)}</td>
+                    <td class="p-3 whitespace-nowrap">${issue.dateReported}</td>
+                    <td class="p-3"><span class="bg-gray-200 px-2 py-1 rounded text-xs">${issue.category}</span></td>
+                    <td class="p-3">${issue.page || '-'}</td>
+                    <td class="p-3 max-w-xs truncate" title="${issue.description}">${issue.description}</td>
+                    <td class="p-3 max-w-xs truncate" title="${issue.remarks}">${issue.remarks || '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }, (error) => {
+            console.error("Firestore Error: ", error);
+            document.getElementById('tableBody').innerHTML = `<tr><td colspan="6" class="p-8 text-center text-red-500 font-bold">Failed to load data. Check Firebase Rules.</td></tr>`;
+        });
+
+        // ফর্মে সাবমিট হলে সেভ হওয়া
+        document.getElementById('issueForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            btn.disabled = true;
+            btnText.innerText = "Saving to Firebase...";
+
+            const dateInput = new Date(document.getElementById('dateReported').value);
+            const formattedDate = dateInput.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).replace(/ /g, '-');
+            const autoIssueId = "ISS-" + Math.floor(1000 + Math.random() * 9000);
+
+            const payload = {
+                issueId: autoIssueId,
+                dateReported: formattedDate,
+                category: document.getElementById('category').value,
+                page: document.getElementById('page').value,
+                description: document.getElementById('description').value,
+                remarks: document.getElementById('remarks').value,
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                await addDoc(issuesCol, payload);
+                showToast("Successfully saved to Firebase!");
+                document.getElementById('issueForm').reset();
+            } catch (err) {
+                console.error("Save error: ", err);
+                showToast("Failed to save data. Check Rules.", true);
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = "Save Entry";
+            }
+        });
+    </script>
+</body>
+</html>
