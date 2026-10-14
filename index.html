@@ -51,8 +51,9 @@
                         <div><label class="block text-sm font-bold mb-1">Remarks / Resolution</label><textarea id="remarks" rows="3" class="w-full border p-2 rounded"></textarea></div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div><label class="block text-sm font-bold mb-1">Entry By (Name) *</label><input type="text" id="entryBy" required class="w-full border p-2 rounded"></div>        
+                    <div class="mt-4">
+                        <label class="block text-sm font-bold mb-1">Entry By (Name) *</label>
+                        <input type="text" id="entryBy" required class="w-full md:w-1/2 border p-2 rounded">
                     </div>
 
                     <div class="flex justify-end pt-4 border-t mt-4">
@@ -68,7 +69,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
@@ -80,27 +80,17 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
         const issuesCol = collection(db, "issues");
 
         document.getElementById('issueForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerText = "Uploading & Saving...";
+            const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerText = "Saving...";
             
             const autoIssueId = "ISS-" + Math.floor(1000 + Math.random() * 9000);
             
             // Auto Capture Entry DateTime
             const now = new Date();
             const entryDateTime = now.toLocaleString('en-GB');
-
-            // Handle File Upload
-            let attachmentUrl = "";
-            const fileInput = document.getElementById('attachment').files[0];
-            if (fileInput) {
-                const storageRef = ref(storage, 'attachments/' + now.getTime() + '_' + fileInput.name);
-                await uploadBytes(storageRef, fileInput);
-                attachmentUrl = await getDownloadURL(storageRef);
-            }
 
             try {
                 await addDoc(issuesCol, {
@@ -114,7 +104,6 @@
                     remarks: document.getElementById('remarks').value,
                     entryBy: document.getElementById('entryBy').value,
                     entryDateTime: entryDateTime,
-                    attachmentUrl: attachmentUrl,
                     createdAt: serverTimestamp()
                 });
                 
@@ -122,7 +111,7 @@
                 setTimeout(() => toast.classList.remove('show'), 3000);
                 document.getElementById('issueForm').reset();
                 window.location.href = "register.html";
-            } catch (err) { alert("Error saving data! Check Firebase Rules."); console.error(err); }
+            } catch (err) { alert("Error saving data!"); console.error(err); }
             btn.disabled = false; btn.innerText = "Save Ticket";
         });
     </script>
