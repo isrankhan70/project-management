@@ -11,9 +11,8 @@
         .toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
-<body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100">
+<body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100 hidden" id="mainContent">
 
-    <!-- Sidebar -->
     <aside class="w-64 bg-white shadow-xl flex-shrink-0 flex flex-col z-10">
         <div class="p-5 bg-blue-700 text-white text-center shadow-md">
             <h2 class="text-2xl font-bold">Admin Panel</h2>
@@ -22,10 +21,11 @@
             <a href="index.html" class="block px-4 py-3 rounded bg-blue-50 text-blue-700 font-bold border-l-4 border-blue-600 shadow-sm transition">📝 Ticket Entry</a>
             <a href="register.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📋 Ticket Register</a>
             <a href="dashboard.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📊 Ticket Dashboard</a>
+            
+            <a href="#" id="logoutBtn" class="block px-4 py-3 mt-10 rounded bg-red-50 text-red-600 font-bold border border-red-200 hover:bg-red-100 transition text-center">🚪 Logout</a>
         </nav>
     </aside>
 
-    <!-- Content -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto">
         <div class="max-w-6xl mx-auto pb-10">
             <header class="bg-blue-600 text-white rounded-lg p-4 shadow flex justify-between items-center mb-6">
@@ -68,6 +68,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -79,16 +80,29 @@
             appId: "1:178430900706:web:3085f215cb02b840bfa1bb"
         };
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
         const issuesCol = collection(db, "issues");
+
+        // Authentication Check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.replace("login.html");
+            } else {
+                document.getElementById('mainContent').classList.remove('hidden');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => { window.location.replace("login.html"); });
+        });
 
         document.getElementById('issueForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerText = "Saving...";
             
             const autoIssueId = "ISS-" + Math.floor(1000 + Math.random() * 9000);
-            
-            // Auto Capture Entry DateTime
             const now = new Date();
             const entryDateTime = now.toLocaleString('en-GB');
 
