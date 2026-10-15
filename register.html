@@ -3,54 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Register</title>
+    <title>Ticket Register - ERP System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom ERP Theme Colors */
+        .bg-sidebar { background-color: #0b5e5e; }
+        .bg-sidebar-hover { background-color: #084949; }
+        .text-sidebar-text { color: #a1caca; }
+        .dropdown-menu { display: none; }
+        .dropdown-menu.open { display: block; }
+    </style>
 </head>
-<body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100 hidden" id="mainContent">
+<body class="flex h-screen overflow-hidden bg-gray-50 font-sans hidden" id="mainContent">
 
-    <aside class="w-64 bg-white shadow-xl flex-shrink-0 flex flex-col z-10">
-        <div class="p-5 bg-blue-700 text-white text-center shadow-md">
-            <h2 class="text-2xl font-bold">Admin Panel</h2>
+    <!-- 1. Left Sidebar (ERP Style) -->
+    <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20 transition-all duration-300">
+        
+        <!-- User Profile Section -->
+        <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover cursor-pointer">
+            <img src="https://ui-avatars.com/api/?name=Admin+User&background=ffffff&color=0b5e5e&rounded=true" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+            <div>
+                <h3 id="userEmailDisplay" class="font-bold text-sm truncate w-40">Loading...</h3>
+                <p class="text-xs text-sidebar-text">Administrator</p>
+            </div>
+            <i class="fa-solid fa-chevron-down text-xs ml-auto"></i>
         </div>
-        <nav class="flex-1 p-4 space-y-3 overflow-y-auto mt-2">
-            <a href="index.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📝 Ticket Entry</a>
-            <a href="register.html" class="block px-4 py-3 rounded bg-blue-50 text-blue-700 font-bold border-l-4 border-blue-600 shadow-sm transition">📋 Ticket Register</a>
-            <a href="dashboard.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📊 Ticket Dashboard</a>
+
+        <div class="px-4 py-2 text-xs font-bold text-sidebar-text tracking-wider mt-2">MENU</div>
+
+        <!-- Navigation Links with Dropdowns -->
+        <nav class="flex-1 overflow-y-auto pb-4">
             
-            <a href="#" id="logoutBtn" class="block px-4 py-3 mt-10 rounded bg-red-50 text-red-600 font-bold border border-red-200 hover:bg-red-100 transition text-center">🚪 Logout</a>
+            <!-- Dashboard Link -->
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                <i class="fa-solid fa-house w-5 text-center"></i>
+                <span class="font-semibold text-sm">Dashboard</span>
+            </a>
+
+            <!-- Admin Dropdown (Open by default since we are in Ticket Register) -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 hover:text-white hover:bg-sidebar-hover transition text-white bg-sidebar-hover">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users-gear w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Admin / IT</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200" style="transform: rotate(180deg);"></i>
+                </button>
+                <div id="adminMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1 open">
+                    <a href="index.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📝 Ticket Entry</a>
+                    <!-- Active Link Styling for Register -->
+                    <a href="register.html" class="block py-2 text-sm text-white font-bold border-l-2 border-white pl-2 ml-[-10px]">📋 Ticket Register</a>
+                </div>
+            </div>
+
+            <!-- Human Resource Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('hrMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Human Resource</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="hrMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Employee List</a>
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Attendance</a>
+                </div>
+            </div>
+
+            <!-- Inventory Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('invMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-box-open w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Inventory</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="invMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock In</a>
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock Out</a>
+                </div>
+            </div>
+            
         </nav>
     </aside>
 
-    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
-        <div class="max-w-7xl mx-auto pb-10">
-            <header class="bg-blue-600 text-white rounded-lg p-4 shadow flex justify-between items-center mb-6">
-                <h1 class="text-xl font-bold">Ticket Register</h1>
-            </header>
+    <!-- 2. Right Side Content Area -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <!-- Top Navbar -->
+        <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
+            <!-- Breadcrumb -->
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+                <i class="fa-solid fa-house"></i>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <span>Admin / IT</span>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <span class="font-semibold text-gray-700">Ticket Register</span>
+            </div>
+            
+            <!-- Right Icons & Logout -->
+            <div class="flex items-center gap-4">
+                <button class="text-gray-500 hover:text-gray-700 relative">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full">3</span>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-expand text-lg"></i></button>
+                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-gear text-lg"></i></button>
+                <div class="border-l pl-4 border-gray-300">
+                    <button id="logoutBtn" class="bg-gray-700 hover:bg-red-600 text-white px-4 py-1.5 rounded text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-power-off"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
 
-            <section class="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
-                <table class="w-full text-left border-collapse whitespace-nowrap">
-                    <thead class="bg-blue-50 text-blue-700 text-sm border-b">
-                        <tr>
-                            <th class="p-3">Issue ID</th>
-                            <th class="p-3">Category</th>
-                            <th class="p-3">Raised Time</th>
-                            <th class="p-3">Entry By</th>
-                            <th class="p-3">Status / Solved</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody" class="divide-y text-sm">
-                        <tr><td colspan="5" class="p-8 text-center text-gray-500 font-bold">Loading Data...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-        </div>
-    </main>
+        <!-- Main Table Content Scrollable Area -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <div class="max-w-7xl mx-auto">
+                
+                <!-- Table Header Panel -->
+                <div class="bg-white p-5 rounded-t-lg shadow-sm border border-gray-200 border-b-0 flex items-center justify-between border-t-4 border-t-[#0b5e5e]">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-[#e6f2f2] p-2 rounded-lg text-[#0b5e5e]">
+                            <i class="fa-solid fa-table-list text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-800">Issue Register Log</h2>
+                            <p class="text-xs text-gray-500">Live tracker of all submitted issues and their current status.</p>
+                        </div>
+                    </div>
+                    <a href="index.html" class="px-4 py-2 bg-[#0b5e5e] text-white rounded text-sm font-bold hover:bg-[#084949] shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> New Ticket
+                    </a>
+                </div>
 
+                <!-- Table Section -->
+                <div class="bg-white rounded-b-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full text-left border-collapse whitespace-nowrap">
+                            <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-bold">
+                                <tr>
+                                    <th class="p-4 border-b">Issue ID</th>
+                                    <th class="p-4 border-b">Category</th>
+                                    <th class="p-4 border-b">Raised Time</th>
+                                    <th class="p-4 border-b">Entry By</th>
+                                    <th class="p-4 border-b">Status / Solved</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-gray-100 text-sm">
+                                <tr><td colspan="5" class="p-8 text-center text-gray-500 font-bold">Loading Data from Firebase...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript for Sidebar Dropdowns -->
+    <script>
+        function toggleDropdown(menuId, btn) {
+            const menu = document.getElementById(menuId);
+            const icon = btn.querySelector('.fa-angle-down');
+            if(menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                menu.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
             authDomain: "project-management-70-8277e.firebaseapp.com",
@@ -59,38 +194,59 @@
             messagingSenderId: "178430900706",
             appId: "1:178430900706:web:3085f215cb02b840bfa1bb"
         };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Authentication Check
+        // Auth Protection & Update User Email in Sidebar
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.replace("login.html");
             } else {
                 document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('userEmailDisplay').innerText = user.email;
             }
         });
 
-        // Logout
+        // Logout System
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => { window.location.replace("login.html"); });
+            signOut(auth).then(() => { 
+                window.location.replace("login.html"); 
+            });
         });
 
-        onSnapshot(query(collection(db, "issues"), orderBy("createdAt", "desc")), (snapshot) => {
-            const tbody = document.getElementById('tableBody'); tbody.innerHTML = '';
-            if (snapshot.empty) return tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center">No data found</td></tr>`;
+        // Fetch and Display Firestore Data in Real-time
+        const issuesCol = collection(db, "issues");
+        const q = query(issuesCol, orderBy("createdAt", "desc"));
+
+        onSnapshot(q, (snapshot) => {
+            const tbody = document.getElementById('tableBody'); 
+            tbody.innerHTML = '';
+            
+            if (snapshot.empty) {
+                return tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500 font-bold">No issues found.</td></tr>`;
+            }
             
             snapshot.forEach((doc) => {
                 const issue = doc.data();
-                let solvedStatus = issue.solvedDateTime !== "-" ? `<span class="text-green-600 font-bold">Solved</span><br><span class="text-xs text-gray-500">${issue.solvedDateTime}</span>` : `<span class="text-yellow-600 font-bold">Pending</span>`;
+                
+                // Status Badge Logic
+                let solvedStatus = (issue.solvedDateTime && issue.solvedDateTime !== "-") 
+                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-check mr-1"></i> Solved</span><div class="text-[10px] text-gray-400 mt-1 font-semibold">${issue.solvedDateTime}</div>` 
+                    : `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-clock mr-1"></i> Pending</span>`;
 
-                tbody.innerHTML += `<tr>
-                    <td class="p-3 font-bold">${issue.issueId}</td>
-                    <td class="p-3"><span class="bg-gray-200 px-2 py-1 rounded text-xs">${issue.category}</span></td>
-                    <td class="p-3">${issue.raisedDateTime}</td>
-                    <td class="p-3">${issue.entryBy}<br><span class="text-xs text-gray-500">${issue.entryDateTime}</span></td>
-                    <td class="p-3">${solvedStatus}</td>
+                // Add Row
+                tbody.innerHTML += `
+                <tr class="hover:bg-gray-50 transition cursor-pointer">
+                    <td class="p-4 font-bold text-gray-700">${issue.issueId || '-'}</td>
+                    <td class="p-4"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${issue.category || '-'}</span></td>
+                    <td class="p-4 text-gray-600">${issue.raisedDateTime || '-'}</td>
+                    <td class="p-4">
+                        <div class="font-semibold text-gray-700">${issue.entryBy || 'Unknown'}</div>
+                        <div class="text-[10px] text-gray-400">${issue.entryDateTime || ''}</div>
+                    </td>
+                    <td class="p-4">${solvedStatus}</td>
                 </tr>`;
             });
         });
