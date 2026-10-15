@@ -6,6 +6,8 @@
     <title>Ticket Register - ERP System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         /* Custom ERP Theme Colors */
         .bg-sidebar { background-color: #0b5e5e; }
@@ -46,7 +48,7 @@
                 <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 hover:text-white hover:bg-sidebar-hover transition text-white bg-sidebar-hover">
                     <div class="flex items-center gap-3">
                         <i class="fa-solid fa-users-gear w-5 text-center"></i>
-                        <span class="font-semibold text-sm">Admin / IT</span>
+                        <span class="font-semibold text-sm">Ticket</span>
                     </div>
                     <i class="fa-solid fa-angle-down text-xs transition-transform duration-200" style="transform: rotate(180deg);"></i>
                 </button>
@@ -54,6 +56,21 @@
                     <a href="index.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📝 Ticket Entry</a>
                     <!-- Active Link Styling for Register -->
                     <a href="register.html" class="block py-2 text-sm text-white font-bold border-l-2 border-white pl-2 ml-[-10px]">📋 Ticket Register</a>
+                </div>
+            </div>
+
+            <!-- Human Resource Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('hrMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Human Resource</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="hrMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Employee List</a>
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Attendance</a>
                 </div>
             </div>
 
@@ -84,7 +101,7 @@
             <div class="flex items-center gap-2 text-sm text-gray-500">
                 <i class="fa-solid fa-house"></i>
                 <i class="fa-solid fa-chevron-right text-xs"></i>
-                <span>Admin / IT</span>
+                <span>Ticket</span>
                 <i class="fa-solid fa-chevron-right text-xs"></i>
                 <span class="font-semibold text-gray-700">Ticket Register</span>
             </div>
@@ -107,7 +124,7 @@
 
         <!-- Main Table Content Scrollable Area -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
-            <div class="max-w-7xl mx-auto">
+            <div class="w-full max-w-full mx-auto">
                 
                 <!-- Table Header Panel -->
                 <div class="bg-white p-5 rounded-t-lg shadow-sm border border-gray-200 border-b-0 flex items-center justify-between border-t-4 border-t-[#0b5e5e]">
@@ -125,26 +142,52 @@
                     </a>
                 </div>
 
+                <!-- Date Filter & Export Bar -->
+                <div class="bg-gray-50 p-4 border border-x-gray-200 border-t-0 flex flex-wrap items-end justify-between gap-4 border-b border-gray-200">
+                    <div class="flex flex-wrap items-end gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">From Raised Date</label>
+                            <input type="date" id="fromDate" class="border border-gray-300 p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0b5e5e]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">To Raised Date</label>
+                            <input type="date" id="toDate" class="border border-gray-300 p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0b5e5e]">
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="filterBtn" class="bg-[#0b5e5e] text-white px-5 py-2 rounded text-sm font-bold hover:bg-[#084949] shadow transition">
+                                <i class="fa-solid fa-filter mr-1"></i> Filter
+                            </button>
+                            <button id="resetBtn" class="bg-gray-200 text-gray-700 px-5 py-2 rounded text-sm font-bold hover:bg-gray-300 shadow transition">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button id="exportBtn" class="bg-green-600 text-white px-5 py-2 rounded text-sm font-bold hover:bg-green-700 shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-file-excel"></i> Export to Excel
+                    </button>
+                </div>
+
                 <!-- Table Section -->
-                <div class="bg-white rounded-b-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-white rounded-b-lg shadow-sm border border-t-0 border-gray-200 overflow-hidden">
                     <div class="overflow-x-auto p-4">
-                        <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <table id="registerTable" class="w-full text-left border-collapse whitespace-nowrap min-w-max">
                             <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-bold">
                                 <tr>
-                                    <th class="p-4 border-b">Issue ID</th>
-                                    <th class="p-4 border-b">Category/Module</th>
-                                    <th class="p-4 border-b">Page/Location</th>
-                                    <th class="p-4 border-b">Raised Time</th>
-                                    <th class="p-4 border-b">Respond Time</th>
-                                    <th class="p-4 border-b">Solved Time</th>
-                                    <th class="p-4 border-b">Description</th>
-                                    <th class="p-4 border-b">Remarks</th>
-                                    <th class="p-4 border-b">Entry By</th>
-                                    <th class="p-4 border-b">Status / Solved</th>
+                                    <th class="p-3 border-b">Issue ID</th>
+                                    <th class="p-3 border-b">Category / Module</th>
+                                    <th class="p-3 border-b">Page / Location</th>
+                                    <th class="p-3 border-b">Raised Time</th>
+                                    <th class="p-3 border-b">Respond Time</th>
+                                    <th class="p-3 border-b">Solved Time</th>
+                                    <th class="p-3 border-b">Description</th>
+                                    <th class="p-3 border-b">Remarks</th>
+                                    <th class="p-3 border-b">Entry By</th>
+                                    <th class="p-3 border-b">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="divide-y divide-gray-100 text-sm">
-                                <tr><td colspan="5" class="p-8 text-center text-gray-500 font-bold">Loading Data from Firebase...</td></tr>
+                                <tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">Loading Data from Firebase...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -189,6 +232,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Global variable to hold all fetched data for filtering
+        let allIssuesData = [];
+
         // Auth Protection & Update User Email in Sidebar
         onAuthStateChanged(auth, (user) => {
             if (!user) {
@@ -206,39 +252,102 @@
             });
         });
 
-        // Fetch and Display Firestore Data in Real-time
+        // Fetch Data from Firestore
         const issuesCol = collection(db, "issues");
         const q = query(issuesCol, orderBy("createdAt", "desc"));
 
         onSnapshot(q, (snapshot) => {
+            allIssuesData = []; // Clear array
+            
+            snapshot.forEach((doc) => {
+                allIssuesData.push({ id: doc.id, ...doc.data() });
+            });
+            
+            renderTable(allIssuesData); // Initial render
+        });
+
+        // Function to build HTML Table Rows
+        window.renderTable = function(data) {
             const tbody = document.getElementById('tableBody'); 
             tbody.innerHTML = '';
             
-            if (snapshot.empty) {
-                return tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500 font-bold">No issues found.</td></tr>`;
+            if (data.length === 0) {
+                return tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">No issues found for the selected criteria.</td></tr>`;
             }
             
-            snapshot.forEach((doc) => {
-                const issue = doc.data();
-                
-                // Status Badge Logic
-                let solvedStatus = (issue.solvedDateTime && issue.solvedDateTime !== "-") 
-                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-check mr-1"></i> Solved</span><div class="text-[10px] text-gray-400 mt-1 font-semibold">${issue.solvedDateTime}</div>` 
-                    : `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-clock mr-1"></i> Pending</span>`;
+            data.forEach((issue) => {
+                // Status Logic
+                const isSolved = issue.solvedDateTime && issue.solvedDateTime !== "-";
+                const statusText = isSolved ? 'Solved' : 'Pending';
+                const statusHtml = isSolved 
+                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-check mr-1"></i> Solved</span>` 
+                    : `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-clock mr-1"></i> Pending</span>`;
 
                 // Add Row
                 tbody.innerHTML += `
-                <tr class="hover:bg-gray-50 transition cursor-pointer">
-                    <td class="p-4 font-bold text-gray-700">${issue.issueId || '-'}</td>
-                    <td class="p-4"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${issue.category || '-'}</span></td>
-                    <td class="p-4 text-gray-600">${issue.raisedDateTime || '-'}</td>
-                    <td class="p-4">
+                <tr class="hover:bg-gray-50 transition border-b border-gray-100">
+                    <td class="p-3 font-bold text-gray-700">${issue.issueId || '-'}</td>
+                    <td class="p-3"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${issue.category || '-'}</span></td>
+                    <td class="p-3 text-gray-600 truncate max-w-[150px]" title="${issue.page || '-'}">${issue.page || '-'}</td>
+                    <td class="p-3 text-gray-700 font-medium">${issue.raisedDateTime || '-'}</td>
+                    <td class="p-3 text-gray-500">${issue.respondDateTime || '-'}</td>
+                    <td class="p-3 text-gray-500">${issue.solvedDateTime || '-'}</td>
+                    <td class="p-3 text-gray-600 truncate max-w-[200px]" title="${issue.description || '-'}">${issue.description || '-'}</td>
+                    <td class="p-3 text-gray-500 truncate max-w-[150px]" title="${issue.remarks || '-'}">${issue.remarks || '-'}</td>
+                    <td class="p-3">
                         <div class="font-semibold text-gray-700">${issue.entryBy || 'Unknown'}</div>
                         <div class="text-[10px] text-gray-400">${issue.entryDateTime || ''}</div>
                     </td>
-                    <td class="p-4">${solvedStatus}</td>
+                    <td class="p-3" data-status="${statusText}">${statusHtml}</td>
                 </tr>`;
             });
+        };
+
+        // Filter Logic
+        document.getElementById('filterBtn').addEventListener('click', () => {
+            const fromDateVal = document.getElementById('fromDate').value;
+            const toDateVal = document.getElementById('toDate').value;
+
+            if (!fromDateVal && !toDateVal) {
+                renderTable(allIssuesData);
+                return;
+            }
+
+            const filteredData = allIssuesData.filter(issue => {
+                if (!issue.raisedDateTime) return false;
+                
+                // Extrakt only the date part "YYYY-MM-DD" from "YYYY-MM-DD HH:MM"
+                const issueDateOnly = issue.raisedDateTime.split(' ')[0]; 
+                
+                let match = true;
+                if (fromDateVal && issueDateOnly < fromDateVal) match = false;
+                if (toDateVal && issueDateOnly > toDateVal) match = false;
+                
+                return match;
+            });
+
+            renderTable(filteredData);
+        });
+
+        // Reset Logic
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            document.getElementById('fromDate').value = '';
+            document.getElementById('toDate').value = '';
+            renderTable(allIssuesData);
+        });
+
+        // Export to Excel Logic using SheetJS
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            // Get the HTML table
+            const table = document.getElementById("registerTable");
+            
+            // Create a workbook from the table
+            const workbook = XLSX.utils.table_to_book(table, {sheet: "Ticket Data"});
+            
+            // Note: Since we are using HTML content, SheetJs will pick up exactly what is displayed.
+            // If the table says "Loading..." it will export "Loading...". 
+            // Save the file
+            XLSX.writeFile(workbook, "Ticket_Register_Log.xlsx");
         });
     </script>
 </body>
