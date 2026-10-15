@@ -6,31 +6,38 @@
     <title>User Permissions - ERP System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .bg-sidebar { background-color: #0b5e5e; }
-        .bg-sidebar-hover { background-color: #084949; }
-    </style>
+    <style> .bg-sidebar { background-color: #0b5e5e; } .bg-sidebar-hover { background-color: #084949; } </style>
 </head>
 <body class="flex h-screen overflow-hidden bg-gray-50 font-sans hidden" id="mainContent">
 
-    <!-- Sidebar & Header omitted for brevity in code, but keep your existing sidebar and header here -->
-    <!-- (Apnar ager sidebar o header ekhantate rakhben) -->
+    <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20">
+        <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover">
+            <div class="w-10 h-10 rounded-full bg-white text-[#0b5e5e] flex items-center justify-center font-bold text-xl"><i class="fa-solid fa-user-shield"></i></div>
+            <div><h3 id="userEmailDisplay" class="font-bold text-sm truncate w-40">Admin</h3></div>
+        </div>
+        <div class="px-4 py-2 text-xs font-bold text-[#a1caca] tracking-wider mt-2">ADMIN MENU</div>
+        <nav class="flex-1 overflow-y-auto pb-4">
+            <a href="dashboard.html" class="block px-4 py-3 text-[#a1caca] hover:text-white hover:bg-sidebar-hover transition"><i class="fa-solid fa-house w-5"></i> Dashboard</a>
+            <a href="index.html" class="block px-4 py-3 text-[#a1caca] hover:text-white hover:bg-sidebar-hover transition"><i class="fa-solid fa-plus w-5"></i> Ticket Entry</a>
+            <a href="register.html" class="block px-4 py-3 text-[#a1caca] hover:text-white hover:bg-sidebar-hover transition"><i class="fa-solid fa-list w-5"></i> Ticket Register</a>
+            <a href="permissions.html" class="block px-4 py-3 text-white font-bold border-l-4 border-white bg-sidebar-hover"><i class="fa-solid fa-lock w-5"></i> Permissions</a>
+        </nav>
+    </aside>
 
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative w-full">
         <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
-            <div class="flex items-center gap-2 text-sm text-gray-500">
-                <i class="fa-solid fa-user-shield"></i> <span class="font-semibold text-gray-700">Permissions Control</span>
-            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-500"><i class="fa-solid fa-user-shield"></i> <span class="font-semibold text-gray-700">Permissions Control</span></div>
             <button id="logoutBtn" class="bg-gray-700 hover:bg-red-600 text-white px-4 py-1.5 rounded text-sm font-bold transition">Logout</button>
         </header>
 
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <div class="max-w-6xl mx-auto">
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="bg-[#e6f2f2] px-6 py-4 border-b">
-                        <h3 class="font-bold text-[#0b5e5e]">Page Access Control</h3>
-                        <p class="text-xs text-gray-500">Tick the boxes to grant page access, then click Save.</p>
-                    </div>
+                <div class="bg-white p-5 rounded-t-lg shadow-sm border border-gray-200 border-b-0 flex items-center gap-3 border-t-4 border-t-[#0b5e5e]">
+                    <div class="bg-[#e6f2f2] p-2 rounded-lg text-[#0b5e5e]"><i class="fa-solid fa-shield-halved text-xl"></i></div>
+                    <div><h2 class="text-lg font-bold text-gray-800">User Access & Permissions</h2><p class="text-xs text-gray-500">Tick the boxes to grant page access, then click Save.</p></div>
+                </div>
+
+                <div class="bg-white rounded-b-lg shadow-sm border border-t-0 border-gray-200 overflow-hidden">
                     <div class="overflow-x-auto p-4">
                         <table class="w-full text-left border-collapse whitespace-nowrap">
                             <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-bold">
@@ -39,7 +46,7 @@
                                     <th class="p-4 border-b text-center">Dashboard</th>
                                     <th class="p-4 border-b text-center">Ticket Entry</th>
                                     <th class="p-4 border-b text-center">Ticket Register</th>
-                                    <th class="p-4 border-b text-center">Admin Panel</th>
+                                    <th class="p-4 border-b text-center">Permissions Panel</th>
                                     <th class="p-4 border-b text-center">Action</th>
                                 </tr>
                             </thead>
@@ -56,40 +63,42 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
-            projectId: "project-management-70-8277e",
-            // ... (baki config)
-        };
+        const firebaseConfig = { apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY", projectId: "project-management-70-8277e" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.replace("login.html");
-            else document.getElementById('mainContent').classList.remove('hidden');
+        // Permissions Page Lock Check
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.replace("login.html"); return; }
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists() && userDoc.data().permissions && userDoc.data().permissions.permissionsPage === true) {
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('userEmailDisplay').innerText = user.email;
+            } else {
+                alert("System Access Denied: Admin permission required.");
+                window.location.replace("login.html");
+            }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => { signOut(auth).then(() => { window.location.replace("login.html"); }); });
 
         // Load Users Data
         onSnapshot(collection(db, "users"), (snapshot) => {
-            const tbody = document.getElementById('userTableBody'); 
-            tbody.innerHTML = '';
-            
+            const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
             snapshot.forEach((docSnap) => {
                 const user = docSnap.data();
                 const userId = docSnap.id;
-                const perms = user.permissions || { dashboard: false, ticketEntry: false, ticketRegister: false, adminPanel: false };
+                const perms = user.permissions || { dashboard: false, ticketEntry: false, ticketRegister: false, permissionsPage: false };
                 
                 tbody.innerHTML += `<tr>
                     <td class="p-4 font-semibold text-gray-700">${user.email}</td>
                     <td class="p-4 text-center"><input type="checkbox" id="dash_${userId}" ${perms.dashboard ? 'checked' : ''} class="w-4 h-4 cursor-pointer"></td>
                     <td class="p-4 text-center"><input type="checkbox" id="entry_${userId}" ${perms.ticketEntry ? 'checked' : ''} class="w-4 h-4 cursor-pointer"></td>
                     <td class="p-4 text-center"><input type="checkbox" id="reg_${userId}" ${perms.ticketRegister ? 'checked' : ''} class="w-4 h-4 cursor-pointer"></td>
-                    <td class="p-4 text-center"><input type="checkbox" id="adm_${userId}" ${perms.adminPanel ? 'checked' : ''} class="w-4 h-4 cursor-pointer"></td>
+                    <td class="p-4 text-center"><input type="checkbox" id="perm_${userId}" ${perms.permissionsPage ? 'checked' : ''} class="w-4 h-4 cursor-pointer"></td>
                     <td class="p-4 text-center">
                         <button onclick="savePermissions('${userId}')" class="bg-[#0b5e5e] text-white px-4 py-1.5 rounded text-xs font-bold hover:bg-[#084949] transition">Save</button>
                     </td>
@@ -103,14 +112,11 @@
                     dashboard: document.getElementById(`dash_${userId}`).checked,
                     ticketEntry: document.getElementById(`entry_${userId}`).checked,
                     ticketRegister: document.getElementById(`reg_${userId}`).checked,
-                    adminPanel: document.getElementById(`adm_${userId}`).checked
+                    permissionsPage: document.getElementById(`perm_${userId}`).checked
                 };
-                
                 await updateDoc(doc(db, "users", userId), { permissions: newPerms });
                 alert("Permissions updated successfully!");
-            } catch(e) {
-                alert("Error updating permissions.");
-            }
+            } catch(e) { alert("Error updating permissions."); }
         };
     </script>
 </body>
