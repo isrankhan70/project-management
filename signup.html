@@ -57,7 +57,6 @@
                 .then(async (userCredential) => {
                     const user = userCredential.user;
                     
-                    // User ke Firestore e "approved: false" hisebe save kora hocche
                    // User ke Firestore e default permission shoho save kora hocche
                     await setDoc(doc(db, "users", user.uid), {
                         email: email,
