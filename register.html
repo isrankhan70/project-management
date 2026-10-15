@@ -58,36 +58,6 @@
                     <a href="register.html" class="block py-2 text-sm text-white font-bold border-l-2 border-white pl-2 ml-[-10px]">📋 Ticket Register</a>
                 </div>
             </div>
-
-            <!-- Human Resource Dropdown -->
-            <div class="nav-item">
-                <button onclick="toggleDropdown('hrMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-users w-5 text-center"></i>
-                        <span class="font-semibold text-sm">Human Resource</span>
-                    </div>
-                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
-                </button>
-                <div id="hrMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Employee List</a>
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Attendance</a>
-                </div>
-            </div>
-
-            <!-- Inventory Dropdown -->
-            <div class="nav-item">
-                <button onclick="toggleDropdown('invMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-box-open w-5 text-center"></i>
-                        <span class="font-semibold text-sm">Inventory</span>
-                    </div>
-                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
-                </button>
-                <div id="invMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock In</a>
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock Out</a>
-                </div>
-            </div>
             
         </nav>
     </aside>
@@ -133,8 +103,8 @@
                             <i class="fa-solid fa-table-list text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-gray-800">Issue Register Log</h2>
-                            <p class="text-xs text-gray-500">Live tracker of all submitted issues and their current status.</p>
+                            <h2 class="text-lg font-bold text-gray-800">Ticket Register Log</h2>
+                            <p class="text-xs text-gray-500">Live tracker of all submitted Tickets and their current status.</p>
                         </div>
                     </div>
                     <a href="index.html" class="px-4 py-2 bg-[#0b5e5e] text-white rounded text-sm font-bold hover:bg-[#084949] shadow transition flex items-center gap-2">
@@ -174,7 +144,7 @@
                         <table id="registerTable" class="w-full text-left border-collapse whitespace-nowrap min-w-max">
                             <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-bold">
                                 <tr>
-                                    <th class="p-3 border-b">Issue ID</th>
+                                    <th class="p-3 border-b">Ticket ID</th>
                                     <th class="p-3 border-b">Category / Module</th>
                                     <th class="p-3 border-b">Page / Location</th>
                                     <th class="p-3 border-b">Raised Time</th>
@@ -233,7 +203,7 @@
         const db = getFirestore(app);
 
         // Global variable to hold all fetched data for filtering
-        let allIssuesData = [];
+        let allTicketsData = [];
 
         // Auth Protection & Update User Email in Sidebar
         onAuthStateChanged(auth, (user) => {
@@ -253,17 +223,17 @@
         });
 
         // Fetch Data from Firestore
-        const issuesCol = collection(db, "issues");
-        const q = query(issuesCol, orderBy("createdAt", "desc"));
+        const TicketsCol = collection(db, "Tickets");
+        const q = query(TicketsCol, orderBy("createdAt", "desc"));
 
         onSnapshot(q, (snapshot) => {
-            allIssuesData = []; // Clear array
+            allTicketsData = []; // Clear array
             
             snapshot.forEach((doc) => {
-                allIssuesData.push({ id: doc.id, ...doc.data() });
+                allTicketsData.push({ id: doc.id, ...doc.data() });
             });
             
-            renderTable(allIssuesData); // Initial render
+            renderTable(allTicketsData); // Initial render
         });
 
         // Function to build HTML Table Rows
@@ -272,12 +242,12 @@
             tbody.innerHTML = '';
             
             if (data.length === 0) {
-                return tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">No issues found for the selected criteria.</td></tr>`;
+                return tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">No Tickets found for the selected criteria.</td></tr>`;
             }
             
-            data.forEach((issue) => {
+            data.forEach((Ticket) => {
                 // Status Logic
-                const isSolved = issue.solvedDateTime && issue.solvedDateTime !== "-";
+                const isSolved = Ticket.solvedDateTime && Ticket.solvedDateTime !== "-";
                 const statusText = isSolved ? 'Solved' : 'Pending';
                 const statusHtml = isSolved 
                     ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-check mr-1"></i> Solved</span>` 
@@ -286,17 +256,17 @@
                 // Add Row
                 tbody.innerHTML += `
                 <tr class="hover:bg-gray-50 transition border-b border-gray-100">
-                    <td class="p-3 font-bold text-gray-700">${issue.issueId || '-'}</td>
-                    <td class="p-3"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${issue.category || '-'}</span></td>
-                    <td class="p-3 text-gray-600 truncate max-w-[150px]" title="${issue.page || '-'}">${issue.page || '-'}</td>
-                    <td class="p-3 text-gray-700 font-medium">${issue.raisedDateTime || '-'}</td>
-                    <td class="p-3 text-gray-500">${issue.respondDateTime || '-'}</td>
-                    <td class="p-3 text-gray-500">${issue.solvedDateTime || '-'}</td>
-                    <td class="p-3 text-gray-600 truncate max-w-[200px]" title="${issue.description || '-'}">${issue.description || '-'}</td>
-                    <td class="p-3 text-gray-500 truncate max-w-[150px]" title="${issue.remarks || '-'}">${issue.remarks || '-'}</td>
+                    <td class="p-3 font-bold text-gray-700">${Ticket.TicketId || '-'}</td>
+                    <td class="p-3"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${Ticket.category || '-'}</span></td>
+                    <td class="p-3 text-gray-600 truncate max-w-[150px]" title="${Ticket.page || '-'}">${Ticket.page || '-'}</td>
+                    <td class="p-3 text-gray-700 font-medium">${Ticket.raisedDateTime || '-'}</td>
+                    <td class="p-3 text-gray-500">${Ticket.respondDateTime || '-'}</td>
+                    <td class="p-3 text-gray-500">${Ticket.solvedDateTime || '-'}</td>
+                    <td class="p-3 text-gray-600 truncate max-w-[200px]" title="${Ticket.description || '-'}">${Ticket.description || '-'}</td>
+                    <td class="p-3 text-gray-500 truncate max-w-[150px]" title="${Ticket.remarks || '-'}">${Ticket.remarks || '-'}</td>
                     <td class="p-3">
-                        <div class="font-semibold text-gray-700">${issue.entryBy || 'Unknown'}</div>
-                        <div class="text-[10px] text-gray-400">${issue.entryDateTime || ''}</div>
+                        <div class="font-semibold text-gray-700">${Ticket.entryBy || 'Unknown'}</div>
+                        <div class="text-[10px] text-gray-400">${Ticket.entryDateTime || ''}</div>
                     </td>
                     <td class="p-3" data-status="${statusText}">${statusHtml}</td>
                 </tr>`;
@@ -309,19 +279,19 @@
             const toDateVal = document.getElementById('toDate').value;
 
             if (!fromDateVal && !toDateVal) {
-                renderTable(allIssuesData);
+                renderTable(allTicketsData);
                 return;
             }
 
-            const filteredData = allIssuesData.filter(issue => {
-                if (!issue.raisedDateTime) return false;
+            const filteredData = allTicketsData.filter(Ticket => {
+                if (!Ticket.raisedDateTime) return false;
                 
                 // Extrakt only the date part "YYYY-MM-DD" from "YYYY-MM-DD HH:MM"
-                const issueDateOnly = issue.raisedDateTime.split(' ')[0]; 
+                const TicketDateOnly = Ticket.raisedDateTime.split(' ')[0]; 
                 
                 let match = true;
-                if (fromDateVal && issueDateOnly < fromDateVal) match = false;
-                if (toDateVal && issueDateOnly > toDateVal) match = false;
+                if (fromDateVal && TicketDateOnly < fromDateVal) match = false;
+                if (toDateVal && TicketDateOnly > toDateVal) match = false;
                 
                 return match;
             });
@@ -333,7 +303,7 @@
         document.getElementById('resetBtn').addEventListener('click', () => {
             document.getElementById('fromDate').value = '';
             document.getElementById('toDate').value = '';
-            renderTable(allIssuesData);
+            renderTable(allTicketsData);
         });
 
         // Export to Excel Logic using SheetJS
