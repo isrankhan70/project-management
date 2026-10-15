@@ -106,19 +106,19 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-bold text-gray-800">New Ticket Entry</h2>
-                        <p class="text-xs text-gray-500">Submit a new issue or support request to the system.</p>
+                        <p class="text-xs text-gray-500">Submit a new Ticket or support request to the system.</p>
                     </div>
                 </div>
 
                 <!-- Form Section -->
                 <section class="bg-white rounded-b-lg shadow-sm border border-gray-200 p-6">
-                    <form id="issueForm" class="space-y-5">
+                    <form id="TicketForm" class="space-y-5">
                         
                         <!-- Row 1 -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1">Issue ID</label>
-                                <input type="text" id="issueId" value="Auto Generated" readonly class="w-full border border-gray-300 p-2.5 rounded bg-gray-100 text-gray-500 cursor-not-allowed font-semibold focus:outline-none">
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Ticket ID</label>
+                                <input type="text" id="TicketId" value="Auto Generated" readonly class="w-full border border-gray-300 p-2.5 rounded bg-gray-100 text-gray-500 cursor-not-allowed font-semibold focus:outline-none">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Category / Module <span class="text-red-500">*</span></label>
@@ -149,8 +149,8 @@
                         <!-- Row 3 -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1">Issue Description <span class="text-red-500">*</span></label>
-                                <textarea id="description" required rows="4" placeholder="Describe the issue in detail..." class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition resize-none"></textarea>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Ticket Description <span class="text-red-500">*</span></label>
+                                <textarea id="description" required rows="4" placeholder="Describe the Ticket in detail..." class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition resize-none"></textarea>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Remarks / Resolution</label>
@@ -173,7 +173,7 @@
 
                         <!-- Form Actions -->
                         <div class="flex justify-end gap-3 pt-5 border-t border-gray-100 mt-6">
-                            <button type="button" onclick="document.getElementById('issueForm').reset()" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded font-bold hover:bg-gray-300 transition shadow-sm">
+                            <button type="button" onclick="document.getElementById('TicketForm').reset()" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded font-bold hover:bg-gray-300 transition shadow-sm">
                                 Clear Form
                             </button>
                             <button type="submit" id="submitBtn" class="px-6 py-2.5 bg-[#0b5e5e] text-white rounded font-bold hover:bg-[#084949] disabled:opacity-50 flex items-center gap-2 shadow-md transition">
@@ -226,7 +226,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const issuesCol = collection(db, "issues");
+        const TicketsCol = collection(db, "Tickets");
 
         // Auth Protection & Update User Email in Sidebar
         onAuthStateChanged(auth, (user) => {
@@ -246,14 +246,14 @@
         });
 
         // Form Submission Logic
-        document.getElementById('issueForm').addEventListener('submit', async (e) => {
+        document.getElementById('TicketForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn'); 
             const btnText = document.getElementById('btnText');
             btn.disabled = true; 
             btnText.innerText = "Saving...";
             
-            const autoIssueId = "ISS-" + Math.floor(1000 + Math.random() * 9000);
+            const autoTicketId = "ISS-" + Math.floor(1000 + Math.random() * 9000);
             
             // Capture Entry Date & Time based on submission time
             const now = new Date();
@@ -261,8 +261,8 @@
 
             try {
                 // Save data to Firestore
-                await addDoc(issuesCol, {
-                    issueId: autoIssueId,
+                await addDoc(TicketsCol, {
+                    TicketId: autoTicketId,
                     category: document.getElementById('category').value,
                     page: document.getElementById('page').value,
                     raisedDateTime: document.getElementById('raisedDateTime').value.replace('T', ' '),
@@ -281,7 +281,7 @@
                 setTimeout(() => toast.classList.remove('show'), 3000);
                 
                 // Reset form and redirect
-                document.getElementById('issueForm').reset();
+                document.getElementById('TicketForm').reset();
                 setTimeout(() => { window.location.href = "register.html"; }, 1000);
                 
             } catch (err) { 
