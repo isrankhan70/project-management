@@ -6,10 +6,8 @@
     <title>Ticket Register - ERP System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS for Excel Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* Custom ERP Theme Colors */
         .bg-sidebar { background-color: #0b5e5e; }
         .bg-sidebar-hover { background-color: #084949; }
         .text-sidebar-text { color: #a1caca; }
@@ -19,10 +17,7 @@
 </head>
 <body class="flex h-screen overflow-hidden bg-gray-50 font-sans hidden" id="mainContent">
 
-    <!-- 1. Left Sidebar (ERP Style) -->
     <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20 transition-all duration-300">
-        
-        <!-- User Profile Section -->
         <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover cursor-pointer">
             <img src="https://ui-avatars.com/api/?name=Admin+User&background=ffffff&color=0b5e5e&rounded=true" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
             <div>
@@ -34,16 +29,12 @@
 
         <div class="px-4 py-2 text-xs font-bold text-sidebar-text tracking-wider mt-2">MENU</div>
 
-        <!-- Navigation Links with Dropdowns -->
         <nav class="flex-1 overflow-y-auto pb-4">
-            
-            <!-- Dashboard Link -->
             <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
                 <i class="fa-solid fa-house w-5 text-center"></i>
                 <span class="font-semibold text-sm">Dashboard</span>
             </a>
 
-            <!-- Admin Dropdown (Open by default since we are in Ticket Register) -->
             <div class="nav-item">
                 <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 hover:text-white hover:bg-sidebar-hover transition text-white bg-sidebar-hover">
                     <div class="flex items-center gap-3">
@@ -54,20 +45,14 @@
                 </button>
                 <div id="adminMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1 open">
                     <a href="index.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📝 Ticket Entry</a>
-                    <!-- Active Link Styling for Register -->
                     <a href="register.html" class="block py-2 text-sm text-white font-bold border-l-2 border-white pl-2 ml-[-10px]">📋 Ticket Register</a>
                 </div>
             </div>
-            
         </nav>
     </aside>
 
-    <!-- 2. Right Side Content Area -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
-        <!-- Top Navbar -->
         <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
-            <!-- Breadcrumb -->
             <div class="flex items-center gap-2 text-sm text-gray-500">
                 <i class="fa-solid fa-house"></i>
                 <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -76,7 +61,6 @@
                 <span class="font-semibold text-gray-700">Ticket Register</span>
             </div>
             
-            <!-- Right Icons & Logout -->
             <div class="flex items-center gap-4">
                 <button class="text-gray-500 hover:text-gray-700 relative">
                     <i class="fa-regular fa-bell text-xl"></i>
@@ -92,11 +76,9 @@
             </div>
         </header>
 
-        <!-- Main Table Content Scrollable Area -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <div class="w-full max-w-full mx-auto">
                 
-                <!-- Table Header Panel -->
                 <div class="bg-white p-5 rounded-t-lg shadow-sm border border-gray-200 border-b-0 flex items-center justify-between border-t-4 border-t-[#0b5e5e]">
                     <div class="flex items-center gap-3">
                         <div class="bg-[#e6f2f2] p-2 rounded-lg text-[#0b5e5e]">
@@ -112,7 +94,6 @@
                     </a>
                 </div>
 
-                <!-- Date Filter & Export Bar -->
                 <div class="bg-gray-50 p-4 border border-x-gray-200 border-t-0 flex flex-wrap items-end justify-between gap-4 border-b border-gray-200">
                     <div class="flex flex-wrap items-end gap-4">
                         <div>
@@ -138,7 +119,6 @@
                     </button>
                 </div>
 
-                <!-- Table Section -->
                 <div class="bg-white rounded-b-lg shadow-sm border border-t-0 border-gray-200 overflow-hidden">
                     <div class="overflow-x-auto p-4">
                         <table id="registerTable" class="w-full text-left border-collapse whitespace-nowrap min-w-max">
@@ -167,7 +147,6 @@
         </main>
     </div>
 
-    <!-- JavaScript for Sidebar Dropdowns -->
     <script>
         function toggleDropdown(menuId, btn) {
             const menu = document.getElementById(menuId);
@@ -182,13 +161,11 @@
         }
     </script>
 
-    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
             authDomain: "project-management-70-8277e.firebaseapp.com",
@@ -202,11 +179,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Global variable to hold all fetched data for filtering and exporting
         let allTicketsData = [];
-        let currentlyDisplayedData = []; // To keep track of filtered data for export
+        let currentlyDisplayedData = []; 
 
-        // Auth Protection & Update User Email in Sidebar
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.replace("login.html");
@@ -216,66 +191,57 @@
             }
         });
 
-        // Logout System
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => { 
-                window.location.replace("login.html"); 
-            });
+            signOut(auth).then(() => { window.location.replace("login.html"); });
         });
 
-        // Fetch Data from Firestore
-        const TicketsCol = collection(db, "issues"); // NOTE: Changed from "Tickets" to "issues" based on your previous code structure
-        const q = query(TicketsCol, orderBy("createdAt", "desc"));
+        const issuesCol = collection(db, "issues"); 
+        const q = query(issuesCol, orderBy("createdAt", "desc"));
 
         onSnapshot(q, (snapshot) => {
-            allTicketsData = []; // Clear array
+            allTicketsData = []; 
             
             snapshot.forEach((doc) => {
                 allTicketsData.push({ id: doc.id, ...doc.data() });
             });
             
             currentlyDisplayedData = [...allTicketsData];
-            renderTable(currentlyDisplayedData); // Initial render
+            renderTable(currentlyDisplayedData); 
         });
 
-        // Function to build HTML Table Rows
         window.renderTable = function(data) {
             const tbody = document.getElementById('tableBody'); 
             tbody.innerHTML = '';
             
             if (data.length === 0) {
-                return tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">No Tickets found for the selected criteria.</td></tr>`;
+                return tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">No Tickets found.</td></tr>`;
             }
             
-            data.forEach((Ticket) => {
-                // Status Logic
-                const isSolved = Ticket.solvedDateTime && Ticket.solvedDateTime !== "-";
-                const statusText = isSolved ? 'Solved' : 'Pending';
+            data.forEach((ticket) => {
+                const isSolved = ticket.solvedDateTime && ticket.solvedDateTime !== "-";
                 const statusHtml = isSolved 
                     ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-check mr-1"></i> Solved</span>` 
                     : `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-clock mr-1"></i> Pending</span>`;
 
-                // Add Row
                 tbody.innerHTML += `
                 <tr class="hover:bg-gray-50 transition border-b border-gray-100">
-                    <td class="p-3 font-bold text-gray-700">${Ticket.issueId || '-'}</td>
-                    <td class="p-3"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${Ticket.category || '-'}</span></td>
-                    <td class="p-3 text-gray-600 truncate max-w-[150px]" title="${Ticket.page || '-'}">${Ticket.page || '-'}</td>
-                    <td class="p-3 text-gray-700 font-medium">${Ticket.raisedDateTime || '-'}</td>
-                    <td class="p-3 text-gray-500">${Ticket.respondDateTime || '-'}</td>
-                    <td class="p-3 text-gray-500">${Ticket.solvedDateTime || '-'}</td>
-                    <td class="p-3 text-gray-600 truncate max-w-[200px]" title="${Ticket.description || '-'}">${Ticket.description || '-'}</td>
-                    <td class="p-3 text-gray-500 truncate max-w-[150px]" title="${Ticket.remarks || '-'}">${Ticket.remarks || '-'}</td>
+                    <td class="p-3 font-bold text-gray-700">${ticket.issueId || '-'}</td>
+                    <td class="p-3"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${ticket.category || '-'}</span></td>
+                    <td class="p-3 text-gray-600 truncate max-w-[150px]" title="${ticket.page || '-'}">${ticket.page || '-'}</td>
+                    <td class="p-3 text-gray-700 font-medium">${ticket.raisedDateTime || '-'}</td>
+                    <td class="p-3 text-gray-500">${ticket.respondDateTime || '-'}</td>
+                    <td class="p-3 text-gray-500">${ticket.solvedDateTime || '-'}</td>
+                    <td class="p-3 text-gray-600 truncate max-w-[200px]" title="${ticket.description || '-'}">${ticket.description || '-'}</td>
+                    <td class="p-3 text-gray-500 truncate max-w-[150px]" title="${ticket.remarks || '-'}">${ticket.remarks || '-'}</td>
                     <td class="p-3">
-                        <div class="font-semibold text-gray-700">${Ticket.entryBy || 'Unknown'}</div>
-                        <div class="text-[10px] text-gray-400">${Ticket.entryDateTime || ''}</div>
+                        <div class="font-semibold text-gray-700">${ticket.entryBy || 'Unknown'}</div>
+                        <div class="text-[10px] text-gray-400">${ticket.entryDateTime || ''}</div>
                     </td>
-                    <td class="p-3" data-status="${statusText}">${statusHtml}</td>
+                    <td class="p-3">${statusHtml}</td>
                 </tr>`;
             });
         };
 
-        // Filter Logic
         document.getElementById('filterBtn').addEventListener('click', () => {
             const fromDateVal = document.getElementById('fromDate').value;
             const toDateVal = document.getElementById('toDate').value;
@@ -286,23 +252,19 @@
                 return;
             }
 
-            currentlyDisplayedData = allTicketsData.filter(Ticket => {
-                if (!Ticket.raisedDateTime) return false;
-                
-                // Extrakt only the date part "YYYY-MM-DD" from "YYYY-MM-DD HH:MM"
-                const TicketDateOnly = Ticket.raisedDateTime.split(' ')[0]; 
+            currentlyDisplayedData = allTicketsData.filter(ticket => {
+                if (!ticket.raisedDateTime) return false;
+                const ticketDateOnly = ticket.raisedDateTime.split(' ')[0]; 
                 
                 let match = true;
-                if (fromDateVal && TicketDateOnly < fromDateVal) match = false;
-                if (toDateVal && TicketDateOnly > toDateVal) match = false;
-                
+                if (fromDateVal && ticketDateOnly < fromDateVal) match = false;
+                if (toDateVal && ticketDateOnly > toDateVal) match = false;
                 return match;
             });
 
             renderTable(currentlyDisplayedData);
         });
 
-        // Reset Logic
         document.getElementById('resetBtn').addEventListener('click', () => {
             document.getElementById('fromDate').value = '';
             document.getElementById('toDate').value = '';
@@ -310,17 +272,14 @@
             renderTable(currentlyDisplayedData);
         });
 
-        // Professional Export to Excel Logic using SheetJS (Exporting from Data Array, not HTML)
         document.getElementById('exportBtn').addEventListener('click', () => {
             if(currentlyDisplayedData.length === 0) {
                 alert("No data to export!");
                 return;
             }
 
-            // Prepare clean data for Excel
             const excelData = currentlyDisplayedData.map(ticket => {
                 const isSolved = ticket.solvedDateTime && ticket.solvedDateTime !== "-";
-                
                 return {
                     "Ticket ID": ticket.issueId || '-',
                     "Category / Module": ticket.category || '-',
@@ -336,12 +295,9 @@
                 };
             });
 
-            // Create a new workbook and add the data
             const worksheet = XLSX.utils.json_to_sheet(excelData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Tickets Log");
-
-            // Save the file
             const dateStr = new Date().toISOString().slice(0, 10);
             XLSX.writeFile(workbook, `Ticket_Register_Log_${dateStr}.xlsx`);
         });
