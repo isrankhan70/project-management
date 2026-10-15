@@ -3,148 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ERP Portal</title>
+    <title>ERP Dashboard - Issue Tracking</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom ERP Theme Colors */
+        .bg-sidebar { background-color: #0b5e5e; } /* গাঢ় সবুজ/নীল সাইডবার */
+        .bg-sidebar-hover { background-color: #084949; }
+        .text-sidebar-text { color: #a1caca; }
+        .dropdown-menu { display: none; }
+        .dropdown-menu.open { display: block; }
+    </style>
 </head>
-<body class="flex h-screen overflow-hidden bg-[#f4f6f9] text-gray-800 hidden font-sans" id="mainContent">
+<body class="flex h-screen overflow-hidden bg-gray-100 font-sans hidden" id="mainContent">
 
-    <!-- Left Sidebar -->
-    <aside class="w-64 bg-[#0a5c5d] text-gray-300 flex-shrink-0 flex flex-col h-full shadow-2xl z-20">
-        <!-- Profile Section -->
-        <div class="flex items-center justify-between p-4 bg-[#084b4c] cursor-pointer hover:bg-[#063e3f] transition">
-            <div class="flex items-center gap-3">
-                <img src="https://ui-avatars.com/api/?name=Isran+Khan&background=ffffff&color=0a5c5d" alt="Profile" class="w-10 h-10 rounded-full border border-gray-300">
-                <div>
-                    <h4 class="text-white font-bold text-sm">Isran Khan</h4>
-                    <p class="text-[10px] text-gray-300">Sr. Executive</p>
+    <!-- 1. Left Sidebar (ERP Style) -->
+    <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20 transition-all duration-300">
+        
+        <!-- User Profile Section -->
+        <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover cursor-pointer">
+            <img src="https://ui-avatars.com/api/?name=Admin+User&background=ffffff&color=0b5e5e&rounded=true" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+            <div>
+                <h3 id="userEmailDisplay" class="font-bold text-sm truncate w-40">Loading...</h3>
+                <p class="text-xs text-sidebar-text">Administrator</p>
+            </div>
+            <i class="fa-solid fa-chevron-down text-xs ml-auto"></i>
+        </div>
+
+        <div class="px-4 py-2 text-xs font-bold text-sidebar-text tracking-wider mt-2">MENU</div>
+
+        <!-- Navigation Links with Dropdowns -->
+        <nav class="flex-1 overflow-y-auto pb-4">
+            
+            <!-- Dashboard Link (Active) -->
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-sidebar-hover border-l-4 border-white transition">
+                <i class="fa-solid fa-house w-5 text-center"></i>
+                <span class="font-semibold text-sm">Dashboard</span>
+            </a>
+
+            <!-- Admin Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users-gear w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Admin / IT</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="adminMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="index.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📝 Ticket Entry</a>
+                    <a href="register.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📋 Ticket Register</a>
                 </div>
             </div>
-            <i class="fas fa-chevron-down text-xs"></i>
-        </div>
 
-        <!-- Menu Navigation -->
-        <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-            <p class="text-xs font-bold text-gray-400 mb-3 tracking-wider">MENU</p>
-            <ul class="space-y-1">
-                <!-- Modules -->
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm text-white transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-cogs w-4 text-center"></i> Admin</div> 
-                        <i class="fas fa-chevron-down text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-users w-4 text-center"></i> Human Resource</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-box w-4 text-center"></i> Inventory</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-shopping-cart w-4 text-center"></i> Procurement</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-briefcase w-4 text-center"></i> Commercial</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-money-bill-wave w-4 text-center"></i> Finance</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-tshirt w-4 text-center"></i> Merchandising</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-chart-pie w-4 text-center"></i> Business Intelligence</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
-                        <div class="flex items-center gap-3"><i class="fas fa-industry w-4 text-center"></i> Production</div> 
-                        <i class="fas fa-chevron-right text-[10px]"></i>
-                    </a>
-                </li>
-                
-                <!-- Issue Tracking Links (Old Menu) -->
-                <li class="pt-6 mt-4 border-t border-[#116d6e]">
-                    <a href="index.html" class="flex items-center gap-3 py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition text-gray-300">
-                        <i class="fas fa-pen-square w-4 text-center"></i> Ticket Entry
-                    </a>
-                </li>
-                <li>
-                    <a href="register.html" class="flex items-center gap-3 py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition text-gray-300">
-                        <i class="fas fa-list-alt w-4 text-center"></i> Ticket Register
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </aside>
-
-    <!-- Main Content Wrapper -->
-    <div class="flex-1 flex flex-col h-screen overflow-hidden">
-        
-        <!-- Top Navbar -->
-        <header class="h-14 bg-[#455a64] flex items-center justify-between px-4 text-white flex-shrink-0 shadow-md z-10">
-            <!-- Toggle Button -->
-            <div>
-                <button class="bg-[#0eb2b6] hover:bg-[#0a9a9d] w-8 h-8 rounded-full flex items-center justify-center transition shadow">
-                    <i class="fas fa-chevron-left text-xs"></i>
+            <!-- Human Resource Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('hrMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Human Resource</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
                 </button>
+                <div id="hrMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Employee List</a>
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Attendance</a>
+                </div>
+            </div>
+
+            <!-- Inventory Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('invMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-box-open w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Inventory</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="invMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock In</a>
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock Out</a>
+                </div>
             </div>
             
-            <!-- Right Actions -->
-            <div class="flex items-center gap-6">
-                <div class="relative cursor-pointer hover:text-gray-200">
-                    <i class="far fa-bell text-[20px]"></i>
-                    <span class="absolute -top-1 -right-2 bg-red-600 text-white text-[9px] font-bold px-[5px] py-[1px] rounded-full">25</span>
-                </div>
-                <i class="far fa-comment-alt text-[20px] cursor-pointer hover:text-gray-200 relative">
-                    <span class="absolute bottom-0 right-0 w-2 h-2 bg-yellow-400 rounded-full border border-[#455a64]"></span>
-                </i>
-                <i class="fas fa-expand text-[18px] cursor-pointer hover:text-gray-200"></i>
-                <i class="fas fa-cog text-[18px] cursor-pointer hover:text-gray-200"></i>
-                
-                <button id="logoutBtn" class="border border-white hover:bg-white hover:text-[#455a64] px-5 py-1 rounded-full text-sm font-bold transition duration-300 ml-2">
-                    Logout
+        </nav>
+    </aside>
+
+    <!-- 2. Right Side Content Area -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <!-- Top Navbar -->
+        <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
+            <!-- Breadcrumb -->
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+                <i class="fa-solid fa-house"></i>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <span class="font-semibold text-gray-700">Dashboard</span>
+            </div>
+            
+            <!-- Right Icons & Logout -->
+            <div class="flex items-center gap-4">
+                <button class="text-gray-500 hover:text-gray-700 relative">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full">3</span>
                 </button>
-                <img src="https://ui-avatars.com/api/?name=Isran+Khan&background=ffffff&color=0a5c5d" class="w-8 h-8 rounded-full ml-2 border border-gray-400 cursor-pointer">
+                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-expand text-lg"></i></button>
+                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-gear text-lg"></i></button>
+                <div class="border-l pl-4 border-gray-300">
+                    <button id="logoutBtn" class="bg-gray-700 hover:bg-red-600 text-white px-4 py-1.5 rounded text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-power-off"></i> Logout
+                    </button>
+                </div>
             </div>
         </header>
 
-        <!-- Breadcrumb -->
-        <div class="bg-white border-b px-5 py-2 flex items-center gap-2 text-sm text-gray-600 flex-shrink-0">
-            <i class="fas fa-home cursor-pointer hover:text-blue-600"></i> 
-            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i> 
-            <span class="text-gray-500 font-semibold">Dashboard</span>
-        </div>
-
-        <!-- Dashboard Content Area (Scrollable) -->
-        <main class="flex-1 p-5 overflow-y-auto bg-gray-50">
-            <div class="max-w-7xl mx-auto space-y-6 pb-10">
+        <!-- Main Dashboard Content Scrollable Area -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <div class="max-w-7xl mx-auto space-y-6">
                 
-                <!-- Ticket Summary Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-[#0eb2b6] hover:shadow-md transition">
-                        <h3 class="text-gray-500 font-bold text-xs tracking-wider">TOTAL TICKETS</h3>
-                        <p id="dashTotal" class="text-4xl font-black text-[#0a5c5d] mt-2">0</p>
+                <!-- Welcome Banner -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800">Welcome to ERP System</h2>
+                    <p class="text-gray-500 mt-1">Manage your issues, resources, and modules from here.</p>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-blue-500 flex justify-between items-center">
+                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">TOTAL TICKETS</h3><p id="dashTotal" class="text-2xl font-black text-gray-800">0</p></div>
+                        <i class="fa-solid fa-ticket text-3xl text-blue-100"></i>
                     </div>
-                    <div class="bg-white p-6 rounded-
+                    <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-green-500 flex justify-between items-center">
+                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">LATEST ISSUE</h3><p id="dashLatest" class="text-xl font-bold text-gray-800">-</p></div>
+                        <i class="fa-solid fa-clock-rotate-left text-3xl text-green-100"></i>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-purple-500 flex justify-between items-center">
+                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">USERS</h3><p id="dashUsers" class="text-2xl font-black text-gray-800">0</p></div>
+                        <i class="fa-solid fa-users text-3xl text-purple-100"></i>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-yellow-500 flex justify-between items-center">
+                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">PENDING</h3><p class="text-2xl font-black text-gray-800">0</p></div>
+                        <i class="fa-solid fa-triangle-exclamation text-3xl text-yellow-100"></i>
+                    </div>
+                </div>
+
+                <!-- User Management Table -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
+                        <h3 class="font-bold text-gray-700">User Management & Permissions</h3>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-bold">Real-time Admin Only</span>
+                    </div>
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full text-left border-collapse whitespace-nowrap">
+                            <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-bold">
+                                <tr>
+                                    <th class="p-3">User Email</th>
+                                    <th class="p-3">Current Status</th>
+                                    <th class="p-3">Admin Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody" class="divide-y text-sm">
+                                <tr><td colspan="3" class="p-8 text-center text-gray-500 font-bold">Loading Users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Dropdown Toggle Logic
+        function toggleDropdown(menuId, btn) {
+            const menu = document.getElementById(menuId);
+            const icon = btn.querySelector('.fa-angle-down');
+            
+            // Toggle open class
+            if(menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                menu.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
+            authDomain: "project-management-70-8277e.firebaseapp.com",
+            projectId: "project-management-70-8277e",
+            storageBucket: "project-management-70-8277e.firebasestorage.app",
+            messagingSenderId: "178430900706",
+            appId: "1:178430900706:web:3085f215cb02b840bfa1bb"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Auth & Show Email
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.replace("login.html");
+            } else {
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('userEmailDisplay').innerText = user.email; // Show email in profile
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => { window.location.replace("login.html"); });
+        });
+
+        // Load Tickets Data
+        onSnapshot(query(collection(db, "issues"), orderBy("createdAt", "desc")), (snapshot) => {
+            let total = 0, latest = "-";
+            snapshot.forEach((doc) => {
+                total++;
+                if (total === 1) latest = doc.data().issueId;
+            });
+            document.getElementById('dashTotal').innerText = total;
+            document.getElementById('dashLatest').innerText = latest;
+        });
+
+        // Load Users Data
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            const tbody = document.getElementById('userTableBody'); 
+            tbody.innerHTML = '';
+            let userCount = 0;
+            
+            if (snapshot.empty) return tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center">No users found</td></tr>`;
+            
+            snapshot.forEach((docSnap) => {
+                userCount++;
+                const user = docSnap.data();
+                const userId = docSnap.id;
+                const isApproved = user.approved === true;
+                
+                const statusHtml = isApproved 
+                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-check mr-1"></i> Approved</span>`
+                    : `<span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-xmark mr-1"></i> Pending</span>`;
+                
+                const actionBtn = isApproved
+                    ? `<button onclick="toggleUserStatus('${userId}', false)" class="text-red-600 hover:text-red-800 font-bold text-sm bg-red-50 px-3 py-1 rounded transition">Revoke Access</button>`
+                    : `<button onclick="toggleUserStatus('${userId}', true)" class="text-white bg-green-600 hover:bg-green-700 font-bold text-sm px-4 py-1.5 rounded shadow-sm transition">Approve Now</button>`;
+
+                tbody.innerHTML += `<tr>
+                    <td class="p-4 font-semibold text-gray-700 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">${user.email.charAt(0).toUpperCase()}</div>
+                        ${user.email}
+                    </td>
+                    <td class="p-4">${statusHtml}</td>
+                    <td class="p-4">${actionBtn}</td>
+                </tr>`;
+            });
+            
+            document.getElementById('dashUsers').innerText = userCount;
+        });
+
+        // Toggle User Status Function
+        window.toggleUserStatus = async function(userId, status) {
+            try {
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, { approved: status });
+            } catch(e) {
+                alert("Error updating status. Check connection.");
+            }
+        };
+    </script>
+</body>
+</html>
