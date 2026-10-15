@@ -58,10 +58,15 @@
                     const user = userCredential.user;
                     
                     // User ke Firestore e "approved: false" hisebe save kora hocche
+                   // User ke Firestore e default permission shoho save kora hocche
                     await setDoc(doc(db, "users", user.uid), {
                         email: email,
-                        approved: false, // Default vabe permission nai
-                        role: "user"
+                        permissions: {
+                            dashboard: false,
+                            ticketEntry: false,
+                            ticketRegister: false,
+                            adminPanel: false // shudhu apni paben
+                        }
                     });
 
                     // Sathe sathe logout kore deya hocche
