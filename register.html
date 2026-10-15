@@ -7,121 +7,54 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-        .bg-sidebar { background-color: #0b5e5e; }
-        .bg-sidebar-hover { background-color: #084949; }
-        .text-sidebar-text { color: #a1caca; }
-        .dropdown-menu { display: none; }
-        .dropdown-menu.open { display: block; }
-    </style>
+    <style> .bg-sidebar { background-color: #0b5e5e; } .bg-sidebar-hover { background-color: #084949; } </style>
 </head>
 <body class="flex h-screen overflow-hidden bg-gray-50 font-sans hidden" id="mainContent">
 
-    <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20 transition-all duration-300">
-        <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover cursor-pointer">
-            <img src="https://ui-avatars.com/api/?name=Admin+User&background=ffffff&color=0b5e5e&rounded=true" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
-            <div>
-                <h3 id="userEmailDisplay" class="font-bold text-sm truncate w-40">Loading...</h3>
-                <p class="text-xs text-sidebar-text">Administrator</p>
-            </div>
-            <i class="fa-solid fa-chevron-down text-xs ml-auto"></i>
+    <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20">
+        <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover">
+            <div class="w-10 h-10 rounded-full bg-white text-[#0b5e5e] flex items-center justify-center font-bold text-xl"><i class="fa-solid fa-user"></i></div>
+            <div><h3 id="userEmailDisplay" class="font-bold text-sm truncate w-40">Loading...</h3></div>
         </div>
-
-        <div class="px-4 py-2 text-xs font-bold text-sidebar-text tracking-wider mt-2">MENU</div>
-
+        <div class="px-4 py-2 text-xs font-bold text-[#a1caca] tracking-wider mt-2">MENU</div>
         <nav class="flex-1 overflow-y-auto pb-4">
-            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
-                <i class="fa-solid fa-house w-5 text-center"></i>
-                <span class="font-semibold text-sm">Dashboard</span>
-            </a>
-
-            <div class="nav-item">
-                <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 hover:text-white hover:bg-sidebar-hover transition text-white bg-sidebar-hover">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-users-gear w-5 text-center"></i>
-                        <span class="font-semibold text-sm">Ticket</span>
-                    </div>
-                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200" style="transform: rotate(180deg);"></i>
-                </button>
-                <div id="adminMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1 open">
-                    <a href="index.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📝 Ticket Entry</a>
-                    <a href="register.html" class="block py-2 text-sm text-white font-bold border-l-2 border-white pl-2 ml-[-10px]">📋 Ticket Register</a>
-                </div>
-            </div>
+            <a href="dashboard.html" class="block px-4 py-3 text-[#a1caca] hover:text-white hover:bg-sidebar-hover transition"><i class="fa-solid fa-house w-5"></i> Dashboard</a>
+            <a href="index.html" class="block px-4 py-3 text-[#a1caca] hover:text-white hover:bg-sidebar-hover transition"><i class="fa-solid fa-plus w-5"></i> Ticket Entry</a>
+            <a href="register.html" class="block px-4 py-3 text-white font-bold border-l-4 border-white bg-sidebar-hover"><i class="fa-solid fa-list w-5"></i> Ticket Register</a>
+            <a href="permissions.html" class="block px-4 py-3 text-[#a1caca] hover:text-white hover:bg-sidebar-hover transition"><i class="fa-solid fa-lock w-5"></i> Permissions</a>
         </nav>
     </aside>
 
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
-            <div class="flex items-center gap-2 text-sm text-gray-500">
-                <i class="fa-solid fa-house"></i>
-                <i class="fa-solid fa-chevron-right text-xs"></i>
-                <span>Ticket</span>
-                <i class="fa-solid fa-chevron-right text-xs"></i>
-                <span class="font-semibold text-gray-700">Ticket Register</span>
-            </div>
-            
-            <div class="flex items-center gap-4">
-                <button class="text-gray-500 hover:text-gray-700 relative">
-                    <i class="fa-regular fa-bell text-xl"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full">3</span>
-                </button>
-                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-expand text-lg"></i></button>
-                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-gear text-lg"></i></button>
-                <div class="border-l pl-4 border-gray-300">
-                    <button id="logoutBtn" class="bg-gray-700 hover:bg-red-600 text-white px-4 py-1.5 rounded text-sm font-bold transition flex items-center gap-2">
-                        <i class="fa-solid fa-power-off"></i> Logout
-                    </button>
-                </div>
-            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-500"><i class="fa-solid fa-house"></i><i class="fa-solid fa-chevron-right text-xs"></i><span class="font-semibold text-gray-700">Ticket Register</span></div>
+            <button id="logoutBtn" class="bg-gray-700 hover:bg-red-600 text-white px-4 py-1.5 rounded text-sm font-bold transition">Logout</button>
         </header>
 
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <div class="w-full max-w-full mx-auto">
-                
                 <div class="bg-white p-5 rounded-t-lg shadow-sm border border-gray-200 border-b-0 flex items-center justify-between border-t-4 border-t-[#0b5e5e]">
                     <div class="flex items-center gap-3">
-                        <div class="bg-[#e6f2f2] p-2 rounded-lg text-[#0b5e5e]">
-                            <i class="fa-solid fa-table-list text-xl"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-bold text-gray-800">Ticket Register Log</h2>
-                            <p class="text-xs text-gray-500">Live tracker of all submitted Tickets and their current status.</p>
-                        </div>
+                        <div class="bg-[#e6f2f2] p-2 rounded-lg text-[#0b5e5e]"><i class="fa-solid fa-table-list text-xl"></i></div>
+                        <div><h2 class="text-lg font-bold text-gray-800">Ticket Register Log</h2><p class="text-xs text-gray-500">Live tracker of all submitted Tickets.</p></div>
                     </div>
-                    <a href="index.html" class="px-4 py-2 bg-[#0b5e5e] text-white rounded text-sm font-bold hover:bg-[#084949] shadow transition flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> New Ticket
-                    </a>
                 </div>
 
                 <div class="bg-gray-50 p-4 border border-x-gray-200 border-t-0 flex flex-wrap items-end justify-between gap-4 border-b border-gray-200">
                     <div class="flex flex-wrap items-end gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">From Raised Date</label>
-                            <input type="date" id="fromDate" class="border border-gray-300 p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0b5e5e]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">To Raised Date</label>
-                            <input type="date" id="toDate" class="border border-gray-300 p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0b5e5e]">
-                        </div>
+                        <div><label class="block text-xs font-bold text-gray-500 mb-1">From Raised Date</label><input type="date" id="fromDate" class="border p-2 rounded text-sm"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 mb-1">To Raised Date</label><input type="date" id="toDate" class="border p-2 rounded text-sm"></div>
                         <div class="flex gap-2">
-                            <button id="filterBtn" class="bg-[#0b5e5e] text-white px-5 py-2 rounded text-sm font-bold hover:bg-[#084949] shadow transition">
-                                <i class="fa-solid fa-filter mr-1"></i> Filter
-                            </button>
-                            <button id="resetBtn" class="bg-gray-200 text-gray-700 px-5 py-2 rounded text-sm font-bold hover:bg-gray-300 shadow transition">
-                                Reset
-                            </button>
+                            <button id="filterBtn" class="bg-[#0b5e5e] text-white px-5 py-2 rounded text-sm font-bold hover:bg-[#084949]"><i class="fa-solid fa-filter mr-1"></i> Filter</button>
+                            <button id="resetBtn" class="bg-gray-200 text-gray-700 px-5 py-2 rounded text-sm font-bold hover:bg-gray-300">Reset</button>
                         </div>
                     </div>
-                    
-                    <button id="exportBtn" class="bg-green-600 text-white px-5 py-2 rounded text-sm font-bold hover:bg-green-700 shadow transition flex items-center gap-2">
-                        <i class="fa-solid fa-file-excel"></i> Export to Excel
-                    </button>
+                    <button id="exportBtn" class="bg-green-600 text-white px-5 py-2 rounded text-sm font-bold hover:bg-green-700 flex items-center gap-2"><i class="fa-solid fa-file-excel"></i> Export to Excel</button>
                 </div>
 
                 <div class="bg-white rounded-b-lg shadow-sm border border-t-0 border-gray-200 overflow-hidden">
                     <div class="overflow-x-auto p-4">
-                        <table id="registerTable" class="w-full text-left border-collapse whitespace-nowrap min-w-max">
+                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
                             <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-bold">
                                 <tr>
                                     <th class="p-3 border-b">Ticket ID</th>
@@ -137,164 +70,111 @@
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="divide-y divide-gray-100 text-sm">
-                                <tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">Loading Data from Firebase...</td></tr>
+                                <tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">Loading Data...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
             </div>
         </main>
     </div>
 
-    <script>
-        function toggleDropdown(menuId, btn) {
-            const menu = document.getElementById(menuId);
-            const icon = btn.querySelector('.fa-angle-down');
-            if(menu.classList.contains('open')) {
-                menu.classList.remove('open');
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                menu.classList.add('open');
-                icon.style.transform = 'rotate(180deg)';
-            }
-        }
-    </script>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
-            authDomain: "project-management-70-8277e.firebaseapp.com",
-            projectId: "project-management-70-8277e",
-            storageBucket: "project-management-70-8277e.firebasestorage.app",
-            messagingSenderId: "178430900706",
-            appId: "1:178430900706:web:3085f215cb02b840bfa1bb"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY", projectId: "project-management-70-8277e" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let allTicketsData = [];
-        let currentlyDisplayedData = []; 
+        let allTicketsData = []; let currentlyDisplayedData = []; 
 
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.replace("login.html");
-            } else {
+        // Page Lock Logic
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.replace("login.html"); return; }
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists() && userDoc.data().permissions && userDoc.data().permissions.ticketRegister === true) {
                 document.getElementById('mainContent').classList.remove('hidden');
                 document.getElementById('userEmailDisplay').innerText = user.email;
+            } else {
+                alert("System Access Denied: You do not have permission to view the Register page.");
+                window.location.replace("login.html");
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => { window.location.replace("login.html"); });
-        });
+        document.getElementById('logoutBtn').addEventListener('click', () => { signOut(auth).then(() => { window.location.replace("login.html"); }); });
 
         const issuesCol = collection(db, "issues"); 
         const q = query(issuesCol, orderBy("createdAt", "desc"));
 
         onSnapshot(q, (snapshot) => {
             allTicketsData = []; 
-            
-            snapshot.forEach((doc) => {
-                allTicketsData.push({ id: doc.id, ...doc.data() });
-            });
-            
+            snapshot.forEach((doc) => { allTicketsData.push({ id: doc.id, ...doc.data() }); });
             currentlyDisplayedData = [...allTicketsData];
             renderTable(currentlyDisplayedData); 
         });
 
         window.renderTable = function(data) {
-            const tbody = document.getElementById('tableBody'); 
-            tbody.innerHTML = '';
-            
-            if (data.length === 0) {
-                return tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">No Tickets found.</td></tr>`;
-            }
+            const tbody = document.getElementById('tableBody'); tbody.innerHTML = '';
+            if (data.length === 0) return tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-gray-500 font-bold">No Tickets found.</td></tr>`;
             
             data.forEach((ticket) => {
                 const isSolved = ticket.solvedDateTime && ticket.solvedDateTime !== "-";
                 const statusHtml = isSolved 
-                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-check mr-1"></i> Solved</span>` 
-                    : `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-clock mr-1"></i> Pending</span>`;
+                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-check mr-1"></i> Solved</span>` 
+                    : `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-clock mr-1"></i> Pending</span>`;
 
                 tbody.innerHTML += `
                 <tr class="hover:bg-gray-50 transition border-b border-gray-100">
                     <td class="p-3 font-bold text-gray-700">${ticket.issueId || '-'}</td>
                     <td class="p-3"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs font-semibold">${ticket.category || '-'}</span></td>
-                    <td class="p-3 text-gray-600 truncate max-w-[150px]" title="${ticket.page || '-'}">${ticket.page || '-'}</td>
+                    <td class="p-3 text-gray-600 truncate max-w-[150px]">${ticket.page || '-'}</td>
                     <td class="p-3 text-gray-700 font-medium">${ticket.raisedDateTime || '-'}</td>
                     <td class="p-3 text-gray-500">${ticket.respondDateTime || '-'}</td>
                     <td class="p-3 text-gray-500">${ticket.solvedDateTime || '-'}</td>
-                    <td class="p-3 text-gray-600 truncate max-w-[200px]" title="${ticket.description || '-'}">${ticket.description || '-'}</td>
-                    <td class="p-3 text-gray-500 truncate max-w-[150px]" title="${ticket.remarks || '-'}">${ticket.remarks || '-'}</td>
-                    <td class="p-3">
-                        <div class="font-semibold text-gray-700">${ticket.entryBy || 'Unknown'}</div>
-                        <div class="text-[10px] text-gray-400">${ticket.entryDateTime || ''}</div>
-                    </td>
+                    <td class="p-3 text-gray-600 truncate max-w-[200px]">${ticket.description || '-'}</td>
+                    <td class="p-3 text-gray-500 truncate max-w-[150px]">${ticket.remarks || '-'}</td>
+                    <td class="p-3"><div class="font-semibold text-gray-700">${ticket.entryBy || 'Unknown'}</div><div class="text-[10px] text-gray-400">${ticket.entryDateTime || ''}</div></td>
                     <td class="p-3">${statusHtml}</td>
                 </tr>`;
             });
         };
 
+        // Filter Logic
         document.getElementById('filterBtn').addEventListener('click', () => {
             const fromDateVal = document.getElementById('fromDate').value;
             const toDateVal = document.getElementById('toDate').value;
-
-            if (!fromDateVal && !toDateVal) {
-                currentlyDisplayedData = [...allTicketsData];
-                renderTable(currentlyDisplayedData);
-                return;
-            }
-
+            if (!fromDateVal && !toDateVal) { currentlyDisplayedData = [...allTicketsData]; renderTable(currentlyDisplayedData); return; }
             currentlyDisplayedData = allTicketsData.filter(ticket => {
                 if (!ticket.raisedDateTime) return false;
                 const ticketDateOnly = ticket.raisedDateTime.split(' ')[0]; 
-                
                 let match = true;
                 if (fromDateVal && ticketDateOnly < fromDateVal) match = false;
                 if (toDateVal && ticketDateOnly > toDateVal) match = false;
                 return match;
             });
-
             renderTable(currentlyDisplayedData);
         });
 
         document.getElementById('resetBtn').addEventListener('click', () => {
-            document.getElementById('fromDate').value = '';
-            document.getElementById('toDate').value = '';
-            currentlyDisplayedData = [...allTicketsData];
-            renderTable(currentlyDisplayedData);
+            document.getElementById('fromDate').value = ''; document.getElementById('toDate').value = '';
+            currentlyDisplayedData = [...allTicketsData]; renderTable(currentlyDisplayedData);
         });
 
+        // Professional Excel Export
         document.getElementById('exportBtn').addEventListener('click', () => {
-            if(currentlyDisplayedData.length === 0) {
-                alert("No data to export!");
-                return;
-            }
-
+            if(currentlyDisplayedData.length === 0) { alert("No data to export!"); return; }
             const excelData = currentlyDisplayedData.map(ticket => {
                 const isSolved = ticket.solvedDateTime && ticket.solvedDateTime !== "-";
                 return {
-                    "Ticket ID": ticket.issueId || '-',
-                    "Category / Module": ticket.category || '-',
-                    "Page / Location": ticket.page || '-',
-                    "Raised Time": ticket.raisedDateTime || '-',
-                    "Respond Time": ticket.respondDateTime || '-',
-                    "Solved Time": ticket.solvedDateTime || '-',
-                    "Description": ticket.description || '-',
-                    "Remarks": ticket.remarks || '-',
-                    "Entry By": ticket.entryBy || 'Unknown',
-                    "Entry Date Time": ticket.entryDateTime || '-',
-                    "Status": isSolved ? 'Solved' : 'Pending'
+                    "Ticket ID": ticket.issueId || '-', "Category / Module": ticket.category || '-', "Page / Location": ticket.page || '-',
+                    "Raised Time": ticket.raisedDateTime || '-', "Respond Time": ticket.respondDateTime || '-', "Solved Time": ticket.solvedDateTime || '-',
+                    "Description": ticket.description || '-', "Remarks": ticket.remarks || '-', "Entry By": ticket.entryBy || 'Unknown',
+                    "Entry Date Time": ticket.entryDateTime || '-', "Status": isSolved ? 'Solved' : 'Pending'
                 };
             });
-
             const worksheet = XLSX.utils.json_to_sheet(excelData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Tickets Log");
