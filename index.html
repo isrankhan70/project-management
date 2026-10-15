@@ -7,24 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Custom ERP Theme Colors */
         .bg-sidebar { background-color: #0b5e5e; }
         .bg-sidebar-hover { background-color: #084949; }
         .text-sidebar-text { color: #a1caca; }
         .dropdown-menu { display: none; }
         .dropdown-menu.open { display: block; }
-        
-        /* Toast Animation */
         .toast { transition: opacity 0.3s ease, transform 0.3s ease; opacity: 0; transform: translateY(100%); }
         .toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden bg-gray-50 font-sans hidden" id="mainContent">
 
-    <!-- 1. Left Sidebar (ERP Style) -->
     <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20 transition-all duration-300">
-        
-        <!-- User Profile Section -->
         <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover cursor-pointer">
             <img src="https://ui-avatars.com/api/?name=Admin+User&background=ffffff&color=0b5e5e&rounded=true" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
             <div>
@@ -36,16 +30,12 @@
 
         <div class="px-4 py-2 text-xs font-bold text-sidebar-text tracking-wider mt-2">MENU</div>
 
-        <!-- Navigation Links with Dropdowns -->
         <nav class="flex-1 overflow-y-auto pb-4">
-            
-            <!-- Dashboard Link -->
             <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
                 <i class="fa-solid fa-house w-5 text-center"></i>
                 <span class="font-semibold text-sm">Dashboard</span>
             </a>
 
-            <!-- Admin Dropdown (Open by default since we are in Ticket Entry) -->
             <div class="nav-item">
                 <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 hover:text-white hover:bg-sidebar-hover transition text-white bg-sidebar-hover">
                     <div class="flex items-center gap-3">
@@ -54,23 +44,16 @@
                     </div>
                     <i class="fa-solid fa-angle-down text-xs transition-transform duration-200" style="transform: rotate(180deg);"></i>
                 </button>
-                <!-- Added 'open' class to make it visible -->
                 <div id="adminMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1 open">
-                    <!-- Active Link Styling -->
                     <a href="index.html" class="block py-2 text-sm text-white font-bold border-l-2 border-white pl-2 ml-[-10px]">📝 Ticket Entry</a>
                     <a href="register.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📋 Ticket Register</a>
                 </div>
             </div>
-            
         </nav>
     </aside>
 
-    <!-- 2. Right Side Content Area -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
-        <!-- Top Navbar -->
         <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
-            <!-- Breadcrumb -->
             <div class="flex items-center gap-2 text-sm text-gray-500">
                 <i class="fa-solid fa-house"></i>
                 <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -79,7 +62,6 @@
                 <span class="font-semibold text-gray-700">Ticket Entry</span>
             </div>
             
-            <!-- Right Icons & Logout -->
             <div class="flex items-center gap-4">
                 <button class="text-gray-500 hover:text-gray-700 relative">
                     <i class="fa-regular fa-bell text-xl"></i>
@@ -95,11 +77,8 @@
             </div>
         </header>
 
-        <!-- Main Form Content Scrollable Area -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <div class="max-w-5xl mx-auto">
-                
-                <!-- Form Header -->
                 <div class="bg-white p-5 rounded-t-lg shadow-sm border border-gray-200 border-b-0 flex items-center gap-3 border-t-4 border-t-[#0b5e5e]">
                     <div class="bg-[#e6f2f2] p-2 rounded-lg text-[#0b5e5e]">
                         <i class="fa-solid fa-file-signature text-xl"></i>
@@ -110,11 +89,8 @@
                     </div>
                 </div>
 
-                <!-- Form Section -->
                 <section class="bg-white rounded-b-lg shadow-sm border border-gray-200 p-6">
                     <form id="TicketForm" class="space-y-5">
-                        
-                        <!-- Row 1 -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Ticket ID</label>
@@ -130,7 +106,6 @@
                             </div>
                         </div>
                         
-                        <!-- Row 2 -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Raised Date & Time <span class="text-red-500">*</span></label>
@@ -146,7 +121,6 @@
                             </div>
                         </div>
 
-                        <!-- Row 3 -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Ticket Description <span class="text-red-500">*</span></label>
@@ -158,7 +132,6 @@
                             </div>
                         </div>
 
-                        <!-- Row 4 -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Entry By (Name) <span class="text-red-500">*</span></label>
@@ -171,7 +144,6 @@
                             </div>
                         </div>
 
-                        <!-- Form Actions -->
                         <div class="flex justify-end gap-3 pt-5 border-t border-gray-100 mt-6">
                             <button type="button" onclick="document.getElementById('TicketForm').reset()" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded font-bold hover:bg-gray-300 transition shadow-sm">
                                 Clear Form
@@ -182,17 +154,14 @@
                         </div>
                     </form>
                 </section>
-
             </div>
         </main>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 font-bold flex items-center gap-2">
         <i class="fa-solid fa-circle-check"></i> <span>Success!</span>
     </div>
 
-    <!-- JavaScript for Sidebar Dropdowns -->
     <script>
         function toggleDropdown(menuId, btn) {
             const menu = document.getElementById(menuId);
@@ -207,13 +176,11 @@
         }
     </script>
 
-    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
             authDomain: "project-management-70-8277e.firebaseapp.com",
@@ -226,9 +193,8 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const TicketsCol = collection(db, "Tickets");
+        const issuesCol = collection(db, "issues"); // Changed from Tickets to issues
 
-        // Auth Protection & Update User Email in Sidebar
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.replace("login.html");
@@ -238,14 +204,10 @@
             }
         });
 
-        // Logout System
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => { 
-                window.location.replace("login.html"); 
-            });
+            signOut(auth).then(() => { window.location.replace("login.html"); });
         });
 
-        // Form Submission Logic
         document.getElementById('TicketForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn'); 
@@ -254,15 +216,12 @@
             btnText.innerText = "Saving...";
             
             const autoTicketId = "ISS-" + Math.floor(1000 + Math.random() * 9000);
-            
-            // Capture Entry Date & Time based on submission time
             const now = new Date();
             const entryDateTime = now.toLocaleString('en-GB');
 
             try {
-                // Save data to Firestore
-                await addDoc(TicketsCol, {
-                    TicketId: autoTicketId,
+                await addDoc(issuesCol, {
+                    issueId: autoTicketId, // Key updated to issueId
                     category: document.getElementById('category').value,
                     page: document.getElementById('page').value,
                     raisedDateTime: document.getElementById('raisedDateTime').value.replace('T', ' '),
@@ -275,12 +234,10 @@
                     createdAt: serverTimestamp()
                 });
                 
-                // Show Success Toast
                 const toast = document.getElementById('toast'); 
                 toast.className = "toast fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 font-bold flex items-center gap-2 show";
                 setTimeout(() => toast.classList.remove('show'), 3000);
                 
-                // Reset form and redirect
                 document.getElementById('TicketForm').reset();
                 setTimeout(() => { window.location.href = "register.html"; }, 1000);
                 
