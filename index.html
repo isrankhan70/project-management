@@ -3,74 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Entry</title>
+    <title>Ticket Entry - ERP System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; }
+        /* Custom ERP Theme Colors */
+        .bg-sidebar { background-color: #0b5e5e; }
+        .bg-sidebar-hover { background-color: #084949; }
+        .text-sidebar-text { color: #a1caca; }
+        .dropdown-menu { display: none; }
+        .dropdown-menu.open { display: block; }
+        
+        /* Toast Animation */
         .toast { transition: opacity 0.3s ease, transform 0.3s ease; opacity: 0; transform: translateY(100%); }
         .toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
-<body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100 hidden" id="mainContent">
+<body class="flex h-screen overflow-hidden bg-gray-50 font-sans hidden" id="mainContent">
 
-    <aside class="w-64 bg-white shadow-xl flex-shrink-0 flex flex-col z-10">
-        <div class="p-5 bg-blue-700 text-white text-center shadow-md">
-            <h2 class="text-2xl font-bold">Admin Panel</h2>
+    <!-- 1. Left Sidebar (ERP Style) -->
+    <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20 transition-all duration-300">
+        
+        <!-- User Profile Section -->
+        <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover cursor-pointer">
+            <img src="https://ui-avatars.com/api/?name=Admin+User&background=ffffff&color=0b5e5e&rounded=true" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+            <div>
+                <h3 id="userEmailDisplay" class="font-bold text-sm truncate w-40">Loading...</h3>
+                <p class="text-xs text-sidebar-text">Administrator</p>
+            </div>
+            <i class="fa-solid fa-chevron-down text-xs ml-auto"></i>
         </div>
-        <nav class="flex-1 p-4 space-y-3 overflow-y-auto mt-2">
-            <a href="index.html" class="block px-4 py-3 rounded bg-blue-50 text-blue-700 font-bold border-l-4 border-blue-600 shadow-sm transition">📝 Ticket Entry</a>
-            <a href="register.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📋 Ticket Register</a>
-            <a href="dashboard.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📊 Ticket Dashboard</a>
+
+        <div class="px-4 py-2 text-xs font-bold text-sidebar-text tracking-wider mt-2">MENU</div>
+
+        <!-- Navigation Links with Dropdowns -->
+        <nav class="flex-1 overflow-y-auto pb-4">
             
-            <a href="#" id="logoutBtn" class="block px-4 py-3 mt-10 rounded bg-red-50 text-red-600 font-bold border border-red-200 hover:bg-red-100 transition text-center">🚪 Logout</a>
+            <!-- Dashboard Link -->
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                <i class="fa-solid fa-house w-5 text-center"></i>
+                <span class="font-semibold text-sm">Dashboard</span>
+            </a>
+
+            <!-- Admin Dropdown (Open by default since we are in Ticket Entry) -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 hover:text-white hover:bg-sidebar-hover transition text-white bg-sidebar-hover">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users-gear w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Admin / IT</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200" style="transform: rotate(180deg);"></i>
+                </button>
+                <!-- Added 'open' class to make it visible -->
+                <div id="adminMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1 open">
+                    <!-- Active Link Styling -->
+                    <a href="index.html" class="block py-2 text-sm text-white font-bold border-l-2 border-white pl-2 ml-[-10px]">📝 Ticket Entry</a>
+                    <a href="register.html" class="block py-2 text-sm text-sidebar-text hover:text-white">📋 Ticket Register</a>
+                </div>
+            </div>
+
+            <!-- Human Resource Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('hrMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Human Resource</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="hrMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Employee List</a>
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Attendance</a>
+                </div>
+            </div>
+
+            <!-- Inventory Dropdown -->
+            <div class="nav-item">
+                <button onclick="toggleDropdown('invMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-box-open w-5 text-center"></i>
+                        <span class="font-semibold text-sm">Inventory</span>
+                    </div>
+                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="invMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock In</a>
+                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock Out</a>
+                </div>
+            </div>
+            
         </nav>
     </aside>
 
-    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
-        <div class="max-w-6xl mx-auto pb-10">
-            <header class="bg-blue-600 text-white rounded-lg p-4 shadow flex justify-between items-center mb-6">
-                <h1 class="text-xl font-bold">Ticket Entry</h1>
-            </header>
+    <!-- 2. Right Side Content Area -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <!-- Top Navbar -->
+        <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
+            <!-- Breadcrumb -->
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+                <i class="fa-solid fa-house"></i>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <span>Admin / IT</span>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+                <span class="font-semibold text-gray-700">Ticket Entry</span>
+            </div>
+            
+            <!-- Right Icons & Logout -->
+            <div class="flex items-center gap-4">
+                <button class="text-gray-500 hover:text-gray-700 relative">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full">3</span>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-expand text-lg"></i></button>
+                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-gear text-lg"></i></button>
+                <div class="border-l pl-4 border-gray-300">
+                    <button id="logoutBtn" class="bg-gray-700 hover:bg-red-600 text-white px-4 py-1.5 rounded text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-power-off"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
 
-            <section class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
-                <form id="issueForm" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div><label class="block text-sm font-bold mb-1">Issue ID</label><input type="text" id="issueId" value="Auto Generated" readonly class="w-full border p-2 rounded bg-gray-200"></div>
-                        <div><label class="block text-sm font-bold mb-1">Category / Module *</label><input type="text" id="category" required class="w-full border p-2 rounded"></div>
-                        <div><label class="block text-sm font-bold mb-1">Page / Location</label><input type="text" id="page" class="w-full border p-2 rounded"></div>
+        <!-- Main Form Content Scrollable Area -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <div class="max-w-5xl mx-auto">
+                
+                <!-- Form Header -->
+                <div class="bg-white p-5 rounded-t-lg shadow-sm border border-gray-200 border-b-0 flex items-center gap-3 border-t-4 border-t-[#0b5e5e]">
+                    <div class="bg-[#e6f2f2] p-2 rounded-lg text-[#0b5e5e]">
+                        <i class="fa-solid fa-file-signature text-xl"></i>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <div><label class="block text-sm font-bold mb-1">Raised Date & Time *</label><input type="datetime-local" id="raisedDateTime" required class="w-full border p-2 rounded"></div>
-                        <div><label class="block text-sm font-bold mb-1">Respond Date & Time</label><input type="datetime-local" id="respondDateTime" class="w-full border p-2 rounded"></div>
-                        <div><label class="block text-sm font-bold mb-1">Solved Date & Time</label><input type="datetime-local" id="solvedDateTime" class="w-full border p-2 rounded"></div>
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-800">New Ticket Entry</h2>
+                        <p class="text-xs text-gray-500">Submit a new issue or support request to the system.</p>
                     </div>
+                </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div><label class="block text-sm font-bold mb-1">Description *</label><textarea id="description" required rows="3" class="w-full border p-2 rounded"></textarea></div>
-                        <div><label class="block text-sm font-bold mb-1">Remarks / Resolution</label><textarea id="remarks" rows="3" class="w-full border p-2 rounded"></textarea></div>
-                    </div>
+                <!-- Form Section -->
+                <section class="bg-white rounded-b-lg shadow-sm border border-gray-200 p-6">
+                    <form id="issueForm" class="space-y-5">
+                        
+                        <!-- Row 1 -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Issue ID</label>
+                                <input type="text" id="issueId" value="Auto Generated" readonly class="w-full border border-gray-300 p-2.5 rounded bg-gray-100 text-gray-500 cursor-not-allowed font-semibold focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Category / Module <span class="text-red-500">*</span></label>
+                                <input type="text" id="category" required placeholder="e.g. Finance, Bug, Hardware" class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:border-[#0b5e5e] focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Page / Location</label>
+                                <input type="text" id="page" placeholder="Where did it happen?" class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:border-[#0b5e5e] focus:outline-none transition">
+                            </div>
+                        </div>
+                        
+                        <!-- Row 2 -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Raised Date & Time <span class="text-red-500">*</span></label>
+                                <input type="datetime-local" id="raisedDateTime" required class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Respond Date & Time</label>
+                                <input type="datetime-local" id="respondDateTime" class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Solved Date & Time</label>
+                                <input type="datetime-local" id="solvedDateTime" class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition">
+                            </div>
+                        </div>
 
-                    <div class="mt-4">
-                        <label class="block text-sm font-bold mb-1">Entry By (Name) *</label>
-                        <input type="text" id="entryBy" required class="w-full md:w-1/2 border p-2 rounded">
-                    </div>
+                        <!-- Row 3 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Issue Description <span class="text-red-500">*</span></label>
+                                <textarea id="description" required rows="4" placeholder="Describe the issue in detail..." class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Remarks / Resolution</label>
+                                <textarea id="remarks" rows="4" placeholder="Admin notes or steps taken to resolve..." class="w-full border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition resize-none"></textarea>
+                            </div>
+                        </div>
 
-                    <div class="flex justify-end pt-4 border-t mt-4">
-                        <button type="submit" id="submitBtn" class="px-6 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700">Save Ticket</button>
-                    </div>
-                </form>
-            </section>
-        </div>
-    </main>
+                        <!-- Row 4 -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Entry By (Name) <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fa-solid fa-user text-gray-400"></i>
+                                    </div>
+                                    <input type="text" id="entryBy" required placeholder="Your Name" class="w-full pl-10 border border-gray-300 p-2.5 rounded focus:ring-2 focus:ring-[#0b5e5e] focus:outline-none transition">
+                                </div>
+                            </div>
+                        </div>
 
-    <div id="toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 font-bold">Success!</div>
+                        <!-- Form Actions -->
+                        <div class="flex justify-end gap-3 pt-5 border-t border-gray-100 mt-6">
+                            <button type="button" onclick="document.getElementById('issueForm').reset()" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded font-bold hover:bg-gray-300 transition shadow-sm">
+                                Clear Form
+                            </button>
+                            <button type="submit" id="submitBtn" class="px-6 py-2.5 bg-[#0b5e5e] text-white rounded font-bold hover:bg-[#084949] disabled:opacity-50 flex items-center gap-2 shadow-md transition">
+                                <i class="fa-solid fa-floppy-disk"></i> <span id="btnText">Save Ticket</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
 
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 font-bold flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> <span>Success!</span>
+    </div>
+
+    <!-- JavaScript for Sidebar Dropdowns -->
+    <script>
+        function toggleDropdown(menuId, btn) {
+            const menu = document.getElementById(menuId);
+            const icon = btn.querySelector('.fa-angle-down');
+            if(menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                menu.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
             authDomain: "project-management-70-8277e.firebaseapp.com",
@@ -79,34 +252,45 @@
             messagingSenderId: "178430900706",
             appId: "1:178430900706:web:3085f215cb02b840bfa1bb"
         };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const issuesCol = collection(db, "issues");
 
-        // Authentication Check
+        // Auth Protection & Update User Email in Sidebar
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.replace("login.html");
             } else {
                 document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('userEmailDisplay').innerText = user.email;
             }
         });
 
-        // Logout
+        // Logout System
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => { window.location.replace("login.html"); });
+            signOut(auth).then(() => { 
+                window.location.replace("login.html"); 
+            });
         });
 
+        // Form Submission Logic
         document.getElementById('issueForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerText = "Saving...";
+            const btn = document.getElementById('submitBtn'); 
+            const btnText = document.getElementById('btnText');
+            btn.disabled = true; 
+            btnText.innerText = "Saving...";
             
             const autoIssueId = "ISS-" + Math.floor(1000 + Math.random() * 9000);
+            
+            // Capture Entry Date & Time based on submission time
             const now = new Date();
             const entryDateTime = now.toLocaleString('en-GB');
 
             try {
+                // Save data to Firestore
                 await addDoc(issuesCol, {
                     issueId: autoIssueId,
                     category: document.getElementById('category').value,
@@ -121,12 +305,22 @@
                     createdAt: serverTimestamp()
                 });
                 
-                const toast = document.getElementById('toast'); toast.className = "toast fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 font-bold show";
+                // Show Success Toast
+                const toast = document.getElementById('toast'); 
+                toast.className = "toast fixed bottom-5 right-5 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 font-bold flex items-center gap-2 show";
                 setTimeout(() => toast.classList.remove('show'), 3000);
+                
+                // Reset form and redirect
                 document.getElementById('issueForm').reset();
-                window.location.href = "register.html";
-            } catch (err) { alert("Error saving data!"); console.error(err); }
-            btn.disabled = false; btn.innerText = "Save Ticket";
+                setTimeout(() => { window.location.href = "register.html"; }, 1000);
+                
+            } catch (err) { 
+                alert("Error saving data! Please check your connection."); 
+                console.error(err); 
+            } finally {
+                btn.disabled = false; 
+                btnText.innerText = "Save Ticket";
+            }
         });
     </script>
 </body>
