@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Management</title>
+    <title>ERP Dashboard - Issue Tracking</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -37,7 +37,7 @@
             <div class="nav-item">
                 <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
                     <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-users-gear w-5 text-center"></i>
+                        <i class="fa-solid fa-ticket w-5 text-center"></i>
                         <span class="font-semibold text-sm">Ticket</span>
                     </div>
                     <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
@@ -48,31 +48,17 @@
                 </div>
             </div>
 
+            <!-- New User Management Sidebar Menu -->
             <div class="nav-item">
-                <button onclick="toggleDropdown('hrMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
+                <button onclick="toggleDropdown('userMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
                     <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-users w-5 text-center"></i>
-                        <span class="font-semibold text-sm">Human Resource</span>
+                        <i class="fa-solid fa-user-shield w-5 text-center"></i>
+                        <span class="font-semibold text-sm">User Management</span>
                     </div>
                     <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
                 </button>
-                <div id="hrMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Employee List</a>
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Attendance</a>
-                </div>
-            </div>
-
-            <div class="nav-item">
-                <button onclick="toggleDropdown('invMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-box-open w-5 text-center"></i>
-                        <span class="font-semibold text-sm">Inventory</span>
-                    </div>
-                    <i class="fa-solid fa-angle-down text-xs transition-transform duration-200"></i>
-                </button>
-                <div id="invMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock In</a>
-                    <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock Out</a>
+                <div id="userMenu" class="dropdown-menu bg-sidebar-hover pl-12 py-1">
+                    <a href="permissions.html" class="block py-2 text-sm text-sidebar-text hover:text-white">🔐 Permissions</a>
                 </div>
             </div>
         </nav>
@@ -87,12 +73,6 @@
             </div>
             
             <div class="flex items-center gap-4">
-                <button class="text-gray-500 hover:text-gray-700 relative">
-                    <i class="fa-regular fa-bell text-xl"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full">3</span>
-                </button>
-                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-expand text-lg"></i></button>
-                <button class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-gear text-lg"></i></button>
                 <div class="border-l pl-4 border-gray-300">
                     <button id="logoutBtn" class="bg-gray-700 hover:bg-red-600 text-white px-4 py-1.5 rounded text-sm font-bold transition flex items-center gap-2">
                         <i class="fa-solid fa-power-off"></i> Logout
@@ -105,11 +85,11 @@
             <div class="max-w-7xl mx-auto space-y-6">
                 
                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                    <h2 class="text-2xl font-bold text-gray-800">Welcome to Project Management</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Welcome to ERP System</h2>
                     <p class="text-gray-500 mt-1">Manage your issues, resources, and modules from here.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-blue-500 flex justify-between items-center">
                         <div><h3 class="text-gray-500 font-bold text-xs mb-1">TOTAL TICKETS</h3><p id="dashTotal" class="text-2xl font-black text-gray-800">0</p></div>
                         <i class="fa-solid fa-ticket text-3xl text-blue-100"></i>
@@ -118,34 +98,9 @@
                         <div><h3 class="text-gray-500 font-bold text-xs mb-1">LATEST ISSUE</h3><p id="dashLatest" class="text-xl font-bold text-gray-800">-</p></div>
                         <i class="fa-solid fa-clock-rotate-left text-3xl text-green-100"></i>
                     </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-purple-500 flex justify-between items-center">
-                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">USERS</h3><p id="dashUsers" class="text-2xl font-black text-gray-800">0</p></div>
-                        <i class="fa-solid fa-users text-3xl text-purple-100"></i>
-                    </div>
                     <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-yellow-500 flex justify-between items-center">
-                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">PENDING</h3><p id="dashPending" class="text-2xl font-black text-gray-800">0</p></div>
+                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">PENDING TICKETS</h3><p id="dashPending" class="text-2xl font-black text-gray-800">0</p></div>
                         <i class="fa-solid fa-triangle-exclamation text-3xl text-yellow-100"></i>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
-                        <h3 class="font-bold text-gray-700">User Management & Permissions</h3>
-                        <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-bold">Real-time Admin Only</span>
-                    </div>
-                    <div class="overflow-x-auto p-4">
-                        <table class="w-full text-left border-collapse whitespace-nowrap">
-                            <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-bold">
-                                <tr>
-                                    <th class="p-3">User Email</th>
-                                    <th class="p-3">Current Status</th>
-                                    <th class="p-3">Admin Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="userTableBody" class="divide-y text-sm">
-                                <tr><td colspan="3" class="p-8 text-center text-gray-500 font-bold">Loading Users...</td></tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
@@ -170,7 +125,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
@@ -197,62 +152,19 @@
             signOut(auth).then(() => { window.location.replace("login.html"); });
         });
 
-        // Load Tickets Data from the correct 'issues' collection
+        // Load Tickets Data
         onSnapshot(query(collection(db, "issues"), orderBy("createdAt", "desc")), (snapshot) => {
             let total = 0, latest = "-", pendingCount = 0;
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 total++;
-                if (total === 1) latest = data.issueId; // Fixed to display the correct ID
+                if (total === 1) latest = data.issueId;
                 if (!data.solvedDateTime || data.solvedDateTime === "-") pendingCount++;
             });
             document.getElementById('dashTotal').innerText = total;
             document.getElementById('dashLatest').innerText = latest;
             document.getElementById('dashPending').innerText = pendingCount;
         });
-
-        onSnapshot(collection(db, "users"), (snapshot) => {
-            const tbody = document.getElementById('userTableBody'); 
-            tbody.innerHTML = '';
-            let userCount = 0;
-            
-            if (snapshot.empty) return tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center">No users found</td></tr>`;
-            
-            snapshot.forEach((docSnap) => {
-                userCount++;
-                const user = docSnap.data();
-                const userId = docSnap.id;
-                const isApproved = user.approved === true;
-                
-                const statusHtml = isApproved 
-                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-check mr-1"></i> Approved</span>`
-                    : `<span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-xmark mr-1"></i> Pending</span>`;
-                
-                const actionBtn = isApproved
-                    ? `<button onclick="toggleUserStatus('${userId}', false)" class="text-red-600 hover:text-red-800 font-bold text-sm bg-red-50 px-3 py-1 rounded transition">Revoke Access</button>`
-                    : `<button onclick="toggleUserStatus('${userId}', true)" class="text-white bg-green-600 hover:bg-green-700 font-bold text-sm px-4 py-1.5 rounded shadow-sm transition">Approve Now</button>`;
-
-                tbody.innerHTML += `<tr>
-                    <td class="p-4 font-semibold text-gray-700 flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">${user.email.charAt(0).toUpperCase()}</div>
-                        ${user.email}
-                    </td>
-                    <td class="p-4">${statusHtml}</td>
-                    <td class="p-4">${actionBtn}</td>
-                </tr>`;
-            });
-            
-            document.getElementById('dashUsers').innerText = userCount;
-        });
-
-        window.toggleUserStatus = async function(userId, status) {
-            try {
-                const userRef = doc(db, "users", userId);
-                await updateDoc(userRef, { approved: status });
-            } catch(e) {
-                alert("Error updating status. Check connection.");
-            }
-        };
     </script>
 </body>
 </html>
