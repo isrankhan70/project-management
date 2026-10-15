@@ -7,8 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Custom ERP Theme Colors */
-        .bg-sidebar { background-color: #0b5e5e; } /* গাঢ় সবুজ/নীল সাইডবার */
+        .bg-sidebar { background-color: #0b5e5e; }
         .bg-sidebar-hover { background-color: #084949; }
         .text-sidebar-text { color: #a1caca; }
         .dropdown-menu { display: none; }
@@ -17,10 +16,7 @@
 </head>
 <body class="flex h-screen overflow-hidden bg-gray-100 font-sans hidden" id="mainContent">
 
-    <!-- 1. Left Sidebar (ERP Style) -->
     <aside class="w-64 bg-sidebar text-white shadow-xl flex-shrink-0 flex flex-col z-20 transition-all duration-300">
-        
-        <!-- User Profile Section -->
         <div class="p-4 border-b border-gray-600 flex items-center gap-3 bg-sidebar-hover cursor-pointer">
             <img src="https://ui-avatars.com/api/?name=Admin+User&background=ffffff&color=0b5e5e&rounded=true" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
             <div>
@@ -32,16 +28,12 @@
 
         <div class="px-4 py-2 text-xs font-bold text-sidebar-text tracking-wider mt-2">MENU</div>
 
-        <!-- Navigation Links with Dropdowns -->
         <nav class="flex-1 overflow-y-auto pb-4">
-            
-            <!-- Dashboard Link (Active) -->
-            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-sidebar-hover border-l-4 border-white transition">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition border-l-4 border-white bg-sidebar-hover">
                 <i class="fa-solid fa-house w-5 text-center"></i>
                 <span class="font-semibold text-sm">Dashboard</span>
             </a>
 
-            <!-- Admin Dropdown -->
             <div class="nav-item">
                 <button onclick="toggleDropdown('adminMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
                     <div class="flex items-center gap-3">
@@ -56,7 +48,6 @@
                 </div>
             </div>
 
-            <!-- Human Resource Dropdown -->
             <div class="nav-item">
                 <button onclick="toggleDropdown('hrMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
                     <div class="flex items-center gap-3">
@@ -71,7 +62,6 @@
                 </div>
             </div>
 
-            <!-- Inventory Dropdown -->
             <div class="nav-item">
                 <button onclick="toggleDropdown('invMenu', this)" class="w-full flex items-center justify-between px-4 py-3 text-sidebar-text hover:text-white hover:bg-sidebar-hover transition">
                     <div class="flex items-center gap-3">
@@ -85,23 +75,17 @@
                     <a href="#" class="block py-2 text-sm text-sidebar-text hover:text-white">Stock Out</a>
                 </div>
             </div>
-            
         </nav>
     </aside>
 
-    <!-- 2. Right Side Content Area -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
-        <!-- Top Navbar -->
         <header class="bg-white h-14 border-b flex items-center justify-between px-4 shadow-sm z-10 shrink-0">
-            <!-- Breadcrumb -->
             <div class="flex items-center gap-2 text-sm text-gray-500">
                 <i class="fa-solid fa-house"></i>
                 <i class="fa-solid fa-chevron-right text-xs"></i>
                 <span class="font-semibold text-gray-700">Dashboard</span>
             </div>
             
-            <!-- Right Icons & Logout -->
             <div class="flex items-center gap-4">
                 <button class="text-gray-500 hover:text-gray-700 relative">
                     <i class="fa-regular fa-bell text-xl"></i>
@@ -117,17 +101,14 @@
             </div>
         </header>
 
-        <!-- Main Dashboard Content Scrollable Area -->
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <div class="max-w-7xl mx-auto space-y-6">
                 
-                <!-- Welcome Banner -->
                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                     <h2 class="text-2xl font-bold text-gray-800">Welcome to ERP System</h2>
                     <p class="text-gray-500 mt-1">Manage your issues, resources, and modules from here.</p>
                 </div>
 
-                <!-- KPI Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-blue-500 flex justify-between items-center">
                         <div><h3 class="text-gray-500 font-bold text-xs mb-1">TOTAL TICKETS</h3><p id="dashTotal" class="text-2xl font-black text-gray-800">0</p></div>
@@ -142,12 +123,11 @@
                         <i class="fa-solid fa-users text-3xl text-purple-100"></i>
                     </div>
                     <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-yellow-500 flex justify-between items-center">
-                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">PENDING</h3><p class="text-2xl font-black text-gray-800">0</p></div>
+                        <div><h3 class="text-gray-500 font-bold text-xs mb-1">PENDING</h3><p id="dashPending" class="text-2xl font-black text-gray-800">0</p></div>
                         <i class="fa-solid fa-triangle-exclamation text-3xl text-yellow-100"></i>
                     </div>
                 </div>
 
-                <!-- User Management Table -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                     <div class="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
                         <h3 class="font-bold text-gray-700">User Management & Permissions</h3>
@@ -173,14 +153,10 @@
         </main>
     </div>
 
-    <!-- Scripts -->
     <script>
-        // Dropdown Toggle Logic
         function toggleDropdown(menuId, btn) {
             const menu = document.getElementById(menuId);
             const icon = btn.querySelector('.fa-angle-down');
-            
-            // Toggle open class
             if(menu.classList.contains('open')) {
                 menu.classList.remove('open');
                 icon.style.transform = 'rotate(0deg)';
@@ -208,33 +184,33 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Auth & Show Email
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.replace("login.html");
             } else {
                 document.getElementById('mainContent').classList.remove('hidden');
-                document.getElementById('userEmailDisplay').innerText = user.email; // Show email in profile
+                document.getElementById('userEmailDisplay').innerText = user.email;
             }
         });
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
             signOut(auth).then(() => { window.location.replace("login.html"); });
         });
 
-        // Load Tickets Data
+        // Load Tickets Data from the correct 'issues' collection
         onSnapshot(query(collection(db, "issues"), orderBy("createdAt", "desc")), (snapshot) => {
-            let total = 0, latest = "-";
+            let total = 0, latest = "-", pendingCount = 0;
             snapshot.forEach((doc) => {
+                const data = doc.data();
                 total++;
-                if (total === 1) latest = doc.data().issueId;
+                if (total === 1) latest = data.issueId; // Fixed to display the correct ID
+                if (!data.solvedDateTime || data.solvedDateTime === "-") pendingCount++;
             });
             document.getElementById('dashTotal').innerText = total;
             document.getElementById('dashLatest').innerText = latest;
+            document.getElementById('dashPending').innerText = pendingCount;
         });
 
-        // Load Users Data
         onSnapshot(collection(db, "users"), (snapshot) => {
             const tbody = document.getElementById('userTableBody'); 
             tbody.innerHTML = '';
@@ -269,7 +245,6 @@
             document.getElementById('dashUsers').innerText = userCount;
         });
 
-        // Toggle User Status Function
         window.toggleUserStatus = async function(userId, status) {
             try {
                 const userRef = doc(db, "users", userId);
