@@ -3,164 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Dashboard</title>
+    <title>Dashboard - ERP Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="text-gray-800 flex h-screen overflow-hidden bg-gray-100 hidden" id="mainContent">
+<body class="flex h-screen overflow-hidden bg-[#f4f6f9] text-gray-800 hidden font-sans" id="mainContent">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-xl flex-shrink-0 flex flex-col z-10">
-        <div class="p-5 bg-blue-700 text-white text-center shadow-md">
-            <h2 class="text-2xl font-bold">Admin Panel</h2>
+    <!-- Left Sidebar -->
+    <aside class="w-64 bg-[#0a5c5d] text-gray-300 flex-shrink-0 flex flex-col h-full shadow-2xl z-20">
+        <!-- Profile Section -->
+        <div class="flex items-center justify-between p-4 bg-[#084b4c] cursor-pointer hover:bg-[#063e3f] transition">
+            <div class="flex items-center gap-3">
+                <img src="https://ui-avatars.com/api/?name=Isran+Khan&background=ffffff&color=0a5c5d" alt="Profile" class="w-10 h-10 rounded-full border border-gray-300">
+                <div>
+                    <h4 class="text-white font-bold text-sm">Isran Khan</h4>
+                    <p class="text-[10px] text-gray-300">Sr. Executive</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-down text-xs"></i>
         </div>
-        <nav class="flex-1 p-4 space-y-3 overflow-y-auto mt-2">
-            <a href="index.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📝 Ticket Entry</a>
-            <a href="register.html" class="block px-4 py-3 rounded text-gray-600 hover:bg-blue-50 hover:text-blue-600 font-semibold transition">📋 Ticket Register</a>
-            <a href="dashboard.html" class="block px-4 py-3 rounded bg-blue-50 text-blue-700 font-bold border-l-4 border-blue-600 shadow-sm transition">📊 Ticket Dashboard</a>
-            
-            <a href="#" id="logoutBtn" class="block px-4 py-3 mt-10 rounded bg-red-50 text-red-600 font-bold border border-red-200 hover:bg-red-100 transition text-center">🚪 Logout</a>
-        </nav>
+
+        <!-- Menu Navigation -->
+        <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+            <p class="text-xs font-bold text-gray-400 mb-3 tracking-wider">MENU</p>
+            <ul class="space-y-1">
+                <!-- Modules -->
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm text-white transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-cogs w-4 text-center"></i> Admin</div> 
+                        <i class="fas fa-chevron-down text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-users w-4 text-center"></i> Human Resource</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-box w-4 text-center"></i> Inventory</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-shopping-cart w-4 text-center"></i> Procurement</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-briefcase w-4 text-center"></i> Commercial</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-money-bill-wave w-4 text-center"></i> Finance</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-tshirt w-4 text-center"></i> Merchandising</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-chart-pie w-4 text-center"></i> Business Intelligence</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center justify-between py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition">
+                        <div class="flex items-center gap-3"><i class="fas fa-industry w-4 text-center"></i> Production</div> 
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                </li>
+                
+                <!-- Issue Tracking Links (Old Menu) -->
+                <li class="pt-6 mt-4 border-t border-[#116d6e]">
+                    <a href="index.html" class="flex items-center gap-3 py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition text-gray-300">
+                        <i class="fas fa-pen-square w-4 text-center"></i> Ticket Entry
+                    </a>
+                </li>
+                <li>
+                    <a href="register.html" class="flex items-center gap-3 py-2 px-3 hover:bg-[#116d6e] rounded text-sm transition text-gray-300">
+                        <i class="fas fa-list-alt w-4 text-center"></i> Ticket Register
+                    </a>
+                </li>
+            </ul>
+        </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
-        <div class="max-w-6xl mx-auto pb-10">
-            <header class="bg-blue-600 text-white rounded-lg p-4 shadow flex justify-between items-center mb-6">
-                <h1 class="text-xl font-bold">Ticket Dashboard</h1>
-            </header>
-
-            <!-- Ticket Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
-                    <h3 class="text-gray-500 font-bold">TOTAL TICKETS</h3>
-                    <p id="dashTotal" class="text-4xl font-black text-blue-600 mt-2">0</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
-                    <h3 class="text-gray-500 font-bold">LATEST TICKET ID</h3>
-                    <p id="dashLatest" class="text-2xl font-bold text-green-600 mt-2">-</p>
-                </div>
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <!-- Top Navbar -->
+        <header class="h-14 bg-[#455a64] flex items-center justify-between px-4 text-white flex-shrink-0 shadow-md z-10">
+            <!-- Toggle Button -->
+            <div>
+                <button class="bg-[#0eb2b6] hover:bg-[#0a9a9d] w-8 h-8 rounded-full flex items-center justify-center transition shadow">
+                    <i class="fas fa-chevron-left text-xs"></i>
+                </button>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow mt-6">
-                <h3 class="font-bold text-gray-700 border-b pb-2 mb-4">Tickets by Category</h3>
-                <div id="categoryBreakdown" class="grid grid-cols-2 gap-4">Loading...</div>
-            </div>
-
-            <!-- New User Management Table -->
-            <div class="bg-white p-6 rounded-lg shadow mt-6 border-t-4 border-purple-600">
-                <h3 class="font-bold text-gray-700 border-b pb-2 mb-4 flex justify-between items-center">
-                    User Management (Admin)
-                    <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">Real-time</span>
-                </h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse whitespace-nowrap">
-                        <thead class="bg-purple-50 text-purple-700 text-sm border-b">
-                            <tr>
-                                <th class="p-3">User Email</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userTableBody" class="divide-y text-sm">
-                            <tr><td colspan="3" class="p-8 text-center text-gray-500 font-bold">Loading Users...</td></tr>
-                        </tbody>
-                    </table>
+            <!-- Right Actions -->
+            <div class="flex items-center gap-6">
+                <div class="relative cursor-pointer hover:text-gray-200">
+                    <i class="far fa-bell text-[20px]"></i>
+                    <span class="absolute -top-1 -right-2 bg-red-600 text-white text-[9px] font-bold px-[5px] py-[1px] rounded-full">25</span>
                 </div>
+                <i class="far fa-comment-alt text-[20px] cursor-pointer hover:text-gray-200 relative">
+                    <span class="absolute bottom-0 right-0 w-2 h-2 bg-yellow-400 rounded-full border border-[#455a64]"></span>
+                </i>
+                <i class="fas fa-expand text-[18px] cursor-pointer hover:text-gray-200"></i>
+                <i class="fas fa-cog text-[18px] cursor-pointer hover:text-gray-200"></i>
+                
+                <button id="logoutBtn" class="border border-white hover:bg-white hover:text-[#455a64] px-5 py-1 rounded-full text-sm font-bold transition duration-300 ml-2">
+                    Logout
+                </button>
+                <img src="https://ui-avatars.com/api/?name=Isran+Khan&background=ffffff&color=0a5c5d" class="w-8 h-8 rounded-full ml-2 border border-gray-400 cursor-pointer">
             </div>
+        </header>
 
+        <!-- Breadcrumb -->
+        <div class="bg-white border-b px-5 py-2 flex items-center gap-2 text-sm text-gray-600 flex-shrink-0">
+            <i class="fas fa-home cursor-pointer hover:text-blue-600"></i> 
+            <i class="fas fa-chevron-right text-[10px] text-gray-400"></i> 
+            <span class="text-gray-500 font-semibold">Dashboard</span>
         </div>
-    </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDjv4YnJeqiqxIV2sGqa_Fs_T8pZEjqXpY",
-            authDomain: "project-management-70-8277e.firebaseapp.com",
-            projectId: "project-management-70-8277e",
-            storageBucket: "project-management-70-8277e.firebasestorage.app",
-            messagingSenderId: "178430900706",
-            appId: "1:178430900706:web:3085f215cb02b840bfa1bb"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Authentication Check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.replace("login.html");
-            } else {
-                document.getElementById('mainContent').classList.remove('hidden');
-            }
-        });
-
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => { window.location.replace("login.html"); });
-        });
-
-        // Load Tickets Data
-        onSnapshot(query(collection(db, "issues"), orderBy("createdAt", "desc")), (snapshot) => {
-            let total = 0, latest = "-", cats = {};
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                total++;
-                if (total === 1) latest = data.issueId;
-                cats[data.category] = (cats[data.category] || 0) + 1;
-            });
-
-            document.getElementById('dashTotal').innerText = total;
-            document.getElementById('dashLatest').innerText = latest;
-            
-            const catDiv = document.getElementById('categoryBreakdown'); catDiv.innerHTML = '';
-            for (const [key, value] of Object.entries(cats)) {
-                catDiv.innerHTML += `<div class="bg-gray-50 p-3 border rounded flex justify-between"><span>${key}</span><span class="font-bold text-blue-600">${value}</span></div>`;
-            }
-        });
-
-        // Load Users Data
-        onSnapshot(collection(db, "users"), (snapshot) => {
-            const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
-            if (snapshot.empty) return tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center">No users found</td></tr>`;
-            
-            snapshot.forEach((docSnap) => {
-                const user = docSnap.data();
-                const userId = docSnap.id;
-                const isApproved = user.approved === true;
+        <!-- Dashboard Content Area (Scrollable) -->
+        <main class="flex-1 p-5 overflow-y-auto bg-gray-50">
+            <div class="max-w-7xl mx-auto space-y-6 pb-10">
                 
-                // Status Badge
-                const statusHtml = isApproved 
-                    ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Approved</span>`
-                    : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Pending</span>`;
-                
-                // Action Button
-                const actionBtn = isApproved
-                    ? `<button onclick="toggleUserStatus('${userId}', false)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-bold shadow-sm transition">Revoke Access</button>`
-                    : `<button onclick="toggleUserStatus('${userId}', true)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-bold shadow-sm transition">Approve User</button>`;
-
-                tbody.innerHTML += `<tr>
-                    <td class="p-3 font-semibold text-gray-700">${user.email}</td>
-                    <td class="p-3">${statusHtml}</td>
-                    <td class="p-3">${actionBtn}</td>
-                </tr>`;
-            });
-        });
-
-        // Toggle User Status Function (Global)
-        window.toggleUserStatus = async function(userId, status) {
-            try {
-                const userRef = doc(db, "users", userId);
-                await updateDoc(userRef, { approved: status });
-                // Optional: Show simple alert
-                // alert(status ? "User has been approved." : "User access revoked.");
-            } catch(e) {
-                alert("Error updating status. Check connection.");
-                console.error(e);
-            }
-        };
-    </script>
-</body>
-</html>
+                <!-- Ticket Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-[#0eb2b6] hover:shadow-md transition">
+                        <h3 class="text-gray-500 font-bold text-xs tracking-wider">TOTAL TICKETS</h3>
+                        <p id="dashTotal" class="text-4xl font-black text-[#0a5c5d] mt-2">0</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-
